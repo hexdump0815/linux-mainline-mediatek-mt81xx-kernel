@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 6f54f2f95743..aeb24a069487 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 5
+ PATCHLEVEL = 4
+ SUBLEVEL = 0
+-EXTRAVERSION = -rc1
++EXTRAVERSION = 
+ NAME = Bobtail Squid
+ 
+ # *DOCUMENTATION*

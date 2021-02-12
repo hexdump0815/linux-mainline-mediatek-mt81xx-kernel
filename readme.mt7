@@ -1,0 +1,60 @@
+# directories:
+# - /compile/doc/stable-mt - the files in this dir
+# - /compile/source/linux-stable-mt8173 - the kernel sources checked out from gitrepo
+# - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
+# name: stb-mt7
+
+# IMPORTANT: this is work in progress and not yet ready to use!
+# status: completely untested so far as i do not have any hardware yet
+# credits go to https://elinux.org/User:Uli/Acer_Chromebook_R13_GPU_test_system
+
+# patches:
+# remove the rc from the version to have a shorter version string
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/shorten-version-string.patch
+
+cp /compile/doc/stable-mt/config.mt7 /compile/source/linux-stable-mt8173/.config
+cd /compile/source/linux-stable-mt8173
+
+export ARCH=arm64
+# no defconfig yet - a special config is used for now ... make defconfig
+# /compile/doc/stable-mt/misc.mt7/options/enable-docker-options.sh
+# /compile/doc/stable-mt/misc.mt7/options/enable-additional-options.sh
+make oldconfig
+make -j 4 Image dtbs modules
+cd tools/perf
+make
+cd ../power/cpupower
+make
+cd ../../..
+export kver=`make kernelrelease`
+echo ${kver}
+# remove debug info if there and not wanted
+#find . -type f -name '*.ko' | sudo xargs -n 1 objcopy --strip-unneeded
+make modules_install
+mkdir -p /lib/modules/${kver}/tools
+cp -v tools/perf/perf /lib/modules/${kver}/tools
+cp -v tools/power/cpupower/cpupower /lib/modules/${kver}/tools
+cp -v tools/power/cpupower/libcpupower.so.0.0.1 /lib/modules/${kver}/tools/libcpupower.so.0
+# make headers_install INSTALL_HDR_PATH=/usr
+cp -v .config /boot/config-${kver}
+cp -v arch/arm64/boot/Image /boot/Image-${kver}
+mkdir -p /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/mediatek/mt81*.dtb /boot/dtb-${kver}
+cp -v System.map /boot/System.map-${kver}
+# start chromebook special - required: apt-get install vboot-kernel-utils
+cp /compile/doc/stable-mt/misc.mt7/misc/kernel.its .
+cp /compile/doc/stable-mt/misc.mt7/misc/cmdline .
+mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg || true
+dd if=/dev/zero of=bootloader.bin bs=512 count=1
+vbutil_kernel --pack vmlinux.kpart --version 1 --vmlinuz vmlinux.uimg --arch aarch64 --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --config cmdline --bootloader bootloader.bin
+cp -v vmlinux.kpart /boot/vmlinux.kpart-${kver}
+rm -f kernel.its cmdline vmlinux.uimg bootloader.bin vmlinux.kpart
+# end chromebook special
+cd /boot
+update-initramfs -c -k ${kver}
+#mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
+tar cvzf /compile/source/linux-stable-mt8173/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+cp -v /compile/doc/stable-mt/config.mt7 /compile/doc/stable-mt/config.mt7.old
+cp -v /compile/source/linux-stable-mt8173/.config /compile/doc/stable-mt/config.mt7
+cp -v /compile/source/linux-stable-mt8173/.config /compile/doc/stable-mt/config.mt7-${kver}
+cp -v /compile/source/linux-stable-mt8173/*.tar.gz /compile/result/stable-mt

@@ -1,0 +1,13 @@
+origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch)
+origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)
+
+for mt8173:
+origin	https://github.com/uli/kernel (fetch)
+origin	https://github.com/uli/kernel (push)
+branch: elm-working-5.4
+
+maybe interesting for experiments - not using the patches:
+https://github.com/Maccraft123/linux
+
+maybe interesting as kind of an upstream mediatek tree
+https://github.com/eballetbo/linux

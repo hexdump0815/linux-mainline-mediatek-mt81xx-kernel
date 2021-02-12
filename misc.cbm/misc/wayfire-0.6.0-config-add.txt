@@ -1,0 +1,5 @@
+[DSI-1]
+mode = 1920x1200@60.000000
+layout = 0,0
+transform = 90
+scale = 1.500000
