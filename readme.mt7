@@ -5,7 +5,7 @@
 # name: stb-mt7
 
 # IMPORTANT: this is work in progress and not yet ready to use!
-# status: completely untested so far as i do not have any hardware yet
+# status: basically working, no gpu support (powervr), still a lot to be done
 # credits go to https://elinux.org/User:Uli/Acer_Chromebook_R13_GPU_test_system
 
 # patches:
