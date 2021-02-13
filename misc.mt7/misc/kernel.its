@@ -13,7 +13,7 @@
             entry = <0>;
         };
         fdt@1{
-            description = "mt8173-elm-rev3i.dtb";
+            description = "mt8173-elm-rev3.dtb";
             data = /incbin/("arch/arm64/boot/dts/mediatek/mt8173-elm-rev3.dtb");
             type = "flat_dt";
             arch = "arm64";
