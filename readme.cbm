@@ -48,15 +48,17 @@ mkdir -p /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt81*.dtb /boot/dtb-${kver}
 cp -v System.map /boot/System.map-${kver}
 # start chromebook special - required: apt-get install vboot-kernel-utils
-dd if=/dev/zero of=bootloader.bin bs=512 count=1
 cp /compile/doc/stable-mt/misc.cbm/misc/krane-kernel.its kernel.its
 cp /compile/doc/stable-mt/misc.cbm/misc/krane-cmdline cmdline
 mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg || true
+dd if=/dev/zero of=bootloader.bin bs=512 count=1
 vbutil_kernel --pack vmlinux.kpart --version 1 --vmlinuz vmlinux.uimg --arch aarch64 --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --config cmdline --bootloader bootloader.bin
 cp -v vmlinux.kpart /boot/vmlinux.kpart-krane-${kver}
+rm -f kernel.its cmdline vmlinux.uimg bootloader.bin vmlinux.kpart
 cp /compile/doc/stable-mt/misc.cbm/misc/elm-kernel.its kernel.its
 cp /compile/doc/stable-mt/misc.cbm/misc/elm-cmdline cmdline
 mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg || true
+dd if=/dev/zero of=bootloader.bin bs=512 count=1
 vbutil_kernel --pack vmlinux.kpart --version 1 --vmlinuz vmlinux.uimg --arch aarch64 --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --config cmdline --bootloader bootloader.bin
 cp -v vmlinux.kpart /boot/vmlinux.kpart-elm-${kver}
 rm -f kernel.its cmdline vmlinux.uimg bootloader.bin vmlinux.kpart
