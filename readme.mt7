@@ -9,14 +9,18 @@
 # credits go to https://elinux.org/User:Uli/Acer_Chromebook_R13_GPU_test_system
 
 # patches:
-# remove the rc from the version to have a shorter version string
-patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/shorten-version-string.patch
+# patch the tree up to v5.4.0 based on https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/rawdiff/?id=v5.4&id2=v5.4-rc1
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/adjusted-5.4-rc1-to-5.4.0.patch
+# patch the tree from 5.4.0 to 5.4.98 based on https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.4.98.xz
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/adjusted-patch-5.4.98.patch
+# make thermal kind of working - zone0 still gives an error
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/make-thermal-kind-of-working.patch
 
 cp /compile/doc/stable-mt/config.mt7 /compile/source/linux-stable-mt8173/.config
 cd /compile/source/linux-stable-mt8173
 
 export ARCH=arm64
-# no defconfig yet - a special config is used for now ... make defconfig
+# no defconfig yet - a special config is used for now ... not: make defconfig
 # /compile/doc/stable-mt/misc.mt7/options/enable-docker-options.sh
 # /compile/doc/stable-mt/misc.mt7/options/enable-additional-options.sh
 make oldconfig
