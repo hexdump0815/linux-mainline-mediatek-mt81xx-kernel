@@ -1,0 +1,67 @@
+# directories:
+# - /compile/doc/stable-mt - the files in this dir
+# - /compile/source/linux-stable-mtup - the kernel sources checked out from gitrepo
+# - /compile/result/stable-mtup - the resulting kernel, modules etc. tar.gz files
+# name: stb-mup
+
+# IMPORTANT: this is work in progress and not yet ready to use!
+# status: not yet known
+# credits go to https://github.com/eballetbo/linux.git
+#        and to https://github.com/eballetbo/chromebooks.git
+
+# INFO: based on the tree commit: 886a49065971728e24889e35130afed1a27c53d1
+#                    from branch: origin/topic/chromeos/somewhat-stable-next
+
+# patches:
+# none yet
+
+cp /compile/doc/stable-mt/config.mup /compile/source/linux-stable-mtup/.config
+cd /compile/source/linux-stable-mtup
+
+export ARCH=arm64
+# scripts/kconfig/merge_config.sh -m -m arch/arm64/configs/defconfig /compile/doc/stable-mt/misc.mup/misc/fragments/chromebooks.cfg /compile/doc/stable-mt/misc.mup/misc/fragments/mediatek.cfg 
+# make olddefconfig
+# /compile/doc/stable-mt/misc.mup/options/enable-docker-options.sh
+# /compile/doc/stable-mt/misc.mup/options/enable-additional-options.sh
+# #/compile/doc/stable-mt/misc.mup/options/remove-unused-options.sh
+make oldconfig
+make -j 4 Image dtbs modules
+cd tools/perf
+make
+cd ../power/cpupower
+make
+cd ../../..
+export kver=`make kernelrelease`
+echo ${kver}
+# remove debug info if there and not wanted
+#find . -type f -name '*.ko' | sudo xargs -n 1 objcopy --strip-unneeded
+make modules_install
+mkdir -p /lib/modules/${kver}/tools
+cp -v tools/perf/perf /lib/modules/${kver}/tools
+cp -v tools/power/cpupower/cpupower /lib/modules/${kver}/tools
+cp -v tools/power/cpupower/libcpupower.so.0.0.1 /lib/modules/${kver}/tools/libcpupower.so.0
+# make headers_install INSTALL_HDR_PATH=/usr
+cp -v .config /boot/config-${kver}
+cp -v arch/arm64/boot/Image /boot/Image-${kver}
+mkdir -p /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/mediatek/mt81*.dtb /boot/dtb-${kver}
+cp -v System.map /boot/System.map-${kver}
+# start chromebook special - required: apt-get install liblz4-tool vboot-kernel-utils
+cp arch/arm64/boot/Image Image
+lz4 -f Image Image.lz4
+cp /compile/doc/stable-mt/misc.mup/misc/cmdline cmdline
+dd if=/dev/zero of=bootloader.bin bs=512 count=1
+#mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb kernel.itb
+mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb kernel.itb
+vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
+cp -v vmlinux.kpart /boot/vmlinux.kpart-${kver}
+rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
+# end chromebook special
+cd /boot
+update-initramfs -c -k ${kver}
+#mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
+tar cvzf /compile/source/linux-stable-mtup/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+cp -v /compile/doc/stable-mt/config.mup /compile/doc/stable-mt/config.mup.old
+cp -v /compile/source/linux-stable-mtup/.config /compile/doc/stable-mt/config.mup
+cp -v /compile/source/linux-stable-mtup/.config /compile/doc/stable-mt/config.mup-${kver}
+cp -v /compile/source/linux-stable-mtup/*.tar.gz /compile/result/stable-mt
