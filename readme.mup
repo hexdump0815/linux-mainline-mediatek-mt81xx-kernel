@@ -19,11 +19,11 @@ cp /compile/doc/stable-mt/config.mup /compile/source/linux-stable-mtup/.config
 cd /compile/source/linux-stable-mtup
 
 export ARCH=arm64
-# scripts/kconfig/merge_config.sh -m -m arch/arm64/configs/defconfig /compile/doc/stable-mt/misc.mup/misc/fragments/chromebooks.cfg /compile/doc/stable-mt/misc.mup/misc/fragments/mediatek.cfg 
-# make olddefconfig
-# /compile/doc/stable-mt/misc.mup/options/enable-docker-options.sh
-# /compile/doc/stable-mt/misc.mup/options/enable-additional-options.sh
-# #/compile/doc/stable-mt/misc.mup/options/remove-unused-options.sh
+scripts/kconfig/merge_config.sh -m -m arch/arm64/configs/defconfig /compile/doc/stable-mt/misc.mup/misc/fragments/chromebooks.cfg /compile/doc/stable-mt/misc.mup/misc/fragments/mediatek.cfg
+make olddefconfig
+/compile/doc/stable-mt/misc.mup/options/enable-docker-options.sh
+/compile/doc/stable-mt/misc.mup/options/enable-additional-options.sh
+#/compile/doc/stable-mt/misc.mup/options/remove-unused-options.sh
 make oldconfig
 make -j 4 Image dtbs modules
 cd tools/perf
