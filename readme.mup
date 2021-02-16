@@ -9,8 +9,8 @@
 # credits go to https://github.com/eballetbo/linux.git
 #        and to https://github.com/eballetbo/chromebooks.git
 
-# INFO: based on the tree commit: 886a49065971728e24889e35130afed1a27c53d1
-#                    from branch: origin/topic/chromeos/somewhat-stable-next
+# INFO: based on the tree commit: 2d6df1817962a0be15eb8d1e1bb1d249a5cc6424
+#                    from branch: origin/topic/chromeos/somewhat-stable-5.11
 
 # patches:
 # none yet
@@ -52,7 +52,8 @@ lz4 -f Image Image.lz4
 cp /compile/doc/stable-mt/misc.mup/misc/cmdline cmdline
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
 #mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb kernel.itb
-mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb kernel.itb
+mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb kernel.itb
+#mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb kernel.itb
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 cp -v vmlinux.kpart /boot/vmlinux.kpart-${kver}
 rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
