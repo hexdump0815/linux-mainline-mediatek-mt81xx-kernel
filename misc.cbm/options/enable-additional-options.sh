@@ -20,15 +20,17 @@ cd /compile/source/linux-stable-mt
 ./scripts/config -d CONFIG_REISERFS_FS
 ./scripts/config -d CONFIG_OCFS2_FS
 
+./scripts/config -d CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+
 ./scripts/config -d CONFIG_LOCALVERSION_AUTO
 ./scripts/config --set-str CONFIG_LOCALVERSION "-stb-cbm"
 
-for i in `cat /compile/doc/stable-mt/misc.cbm/options/additional-options-*-yes.txt`; do
+for i in `cat /compile/doc/stable-mt/misc.cbm/options/additional-options-*-yes.txt | grep -v ^#`; do
   echo $i
   ./scripts/config -e $i
 done
 
-for i in `cat /compile/doc/stable-mt/misc.cbm/options/additional-options-*-mod.txt`; do
+for i in `cat /compile/doc/stable-mt/misc.cbm/options/additional-options-*-mod.txt | grep -v ^#`; do
   echo $i
   ./scripts/config -m $i
 done
