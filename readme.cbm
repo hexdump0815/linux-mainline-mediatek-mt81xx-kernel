@@ -22,14 +22,16 @@ done
 #patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed.patch
 #patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc-order.patch
 #patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-spi-nor-max-frequency.patch
+#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/higher-temps.patch
 
 cp /compile/doc/stable-mt/config.cbm /compile/source/linux-stable-mt/.config
 cd /compile/source/linux-stable-mt
 
 export ARCH=arm64
 # no defconfig yet - a special config is used for now ... no: make defconfig
-# /compile/doc/stable-mt/misc.cbm/options/enable-docker-options.sh
-# /compile/doc/stable-mt/misc.cbm/options/enable-additional-options.sh
+/compile/doc/stable-mt/misc.cbm/options/enable-docker-options.sh
+/compile/doc/stable-mt/misc.cbm/options/enable-additional-options.sh
+#/compile/doc/stable-mt/misc.cbm/options/remove-unused-options.sh
 make oldconfig
 make -j 4 Image dtbs modules
 cd tools/perf
