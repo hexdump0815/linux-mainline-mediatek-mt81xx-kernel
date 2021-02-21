@@ -20,6 +20,8 @@ cd /compile/source/linux-stable-mt
 ./scripts/config -d CONFIG_REISERFS_FS
 ./scripts/config -d CONFIG_OCFS2_FS
 
+./scripts/config --set-val CONFIG_PANIC_TIMEOUT 0
+
 ./scripts/config -d CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 
 ./scripts/config -d CONFIG_LOCALVERSION_AUTO
