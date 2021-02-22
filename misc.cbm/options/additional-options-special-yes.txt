@@ -116,6 +116,8 @@ CONFIG_SPI_MT65XX
 # trying to get the initial framebuufer on boot back
 CONFIG_GOOGLE_FIRMWARE
 CONFIG_FB_SIMPLE
-CONFIG_LCD_CLASS_DEVICE
+# this one seems to be required for the inisital simple fb plus the google stuff from above and in mods
 CONFIG_BACKLIGHT_PWM
-CONFIG_BACKLIGHT_LP855X
+# those two seem to not be required
+#CONFIG_LCD_CLASS_DEVICE
+#CONFIG_BACKLIGHT_LP855X
