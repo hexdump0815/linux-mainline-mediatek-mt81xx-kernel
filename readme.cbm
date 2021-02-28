@@ -19,9 +19,12 @@ for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.1/*.patch; do
 done
 
 # in case of using the alpine elm patches, the above patches were not applied but those
-#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed.patch
+## use a patch which removes even more high speed mmc modes as otherwise it gave errors for me
+##patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed.patch
+#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed-reworked.patch
 #patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc-order.patch
-#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-spi-nor-max-frequency.patch
+## do not use this one - this gave spi-nor errors for me
+##patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-spi-nor-max-frequency.patch
 #patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/higher-temps.patch
 
 cp /compile/doc/stable-mt/config.cbm /compile/source/linux-stable-mt/.config
