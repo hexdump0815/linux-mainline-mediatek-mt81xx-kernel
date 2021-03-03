@@ -136,3 +136,5 @@ CONFIG_DRM_ITE_IT6505
 CONFIG_DRM_SIMPLE_BRIDGE
 CONFIG_PWM_CROS_EC
 CONFIG_FRAMEBUFFER_CONSOLE_ROTATION
+# from working elm mainline config - the krane patches seem to remove this option though
+CONFIG_MTK_INFRACFG
