@@ -1,15 +1,7 @@
 origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch)
 origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)
 
-for mt8173:
-origin	https://github.com/uli/kernel.git (fetch)
-origin	https://github.com/uli/kernel.git (push)
-branch: elm-working-5.4
-
 for mtup:
 origin  https://github.com/eballetbo/linux.git (fetch)
 origin  https://github.com/eballetbo/linux.git (push)
 branch: topic/chromeos/somewhat-stable-5.11
-
-maybe interesting for experiments - not using the patches:
-https://github.com/Maccraft123/linux

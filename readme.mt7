@@ -1,28 +1,32 @@
 # directories:
 # - /compile/doc/stable-mt - the files in this dir
-# - /compile/source/linux-stable-mt8173 - the kernel sources checked out from gitrepo
+# - /compile/source/linux-stable-mt - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # name: stb-mt7
 
-# IMPORTANT: this is work in progress and not yet ready to use!
-# status: basically working, no gpu support (powervr), still a lot to be done
-# credits go to https://elinux.org/User:Uli/Acer_Chromebook_R13_GPU_test_system
+# INFO this is for the elm chromebook, i.e. the acer r13 chromebook and it
+#      might also work on the rk3399 based gru bob and gru kevin chromebooks
+# status: 5.10.20 works without an accelerated gpu driver (which will most
+#         probably never happen as there is no info about the powervr gpu)
+#         most of the rest seems to work well (cpu, wifi, webcam, dvfs, thermal, ...)
 
-# patches:
-# patch the tree up to v5.4.0 based on https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/rawdiff/?id=v5.4&id2=v5.4-rc1
-patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/adjusted-5.4-rc1-to-5.4.0.patch
-# patch the tree from 5.4.0 to 5.4.98 based on https://cdn.kernel.org/pub/linux/kernel/v5.x/patch-5.4.98.xz
-patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/adjusted-patch-5.4.98.patch
-# make thermal kind of working - zone0 still gives an error
-patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/make-thermal-kind-of-working.patch
+# patches for elm:
+# use a patch which removes even more high speed mmc modes as otherwise it gave errors for me
+#patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc1-speed.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc1-speed-reworked.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc-order.patch
+# do not use this one - this gave spi-nor errors for me
+#patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-spi-nor-max-frequency.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/higher-temps.patch
 
-cp /compile/doc/stable-mt/config.mt7 /compile/source/linux-stable-mt8173/.config
-cd /compile/source/linux-stable-mt8173
+cp /compile/doc/stable-mt/config.mt7 /compile/source/linux-stable-mt/.config
+cd /compile/source/linux-stable-mt
 
 export ARCH=arm64
-# no defconfig yet - a special config is used for now ... not: make defconfig
-# /compile/doc/stable-mt/misc.mt7/options/enable-docker-options.sh
-# /compile/doc/stable-mt/misc.mt7/options/enable-additional-options.sh
+make defconfig
+/compile/doc/stable-mt/misc.mt7/options/enable-docker-options.sh
+/compile/doc/stable-mt/misc.mt7/options/enable-additional-options.sh
+#/compile/doc/stable-mt/misc.mt7/options/remove-unused-options.sh
 make oldconfig
 make -j 4 Image dtbs modules
 cd tools/perf
@@ -45,20 +49,25 @@ cp -v arch/arm64/boot/Image /boot/Image-${kver}
 mkdir -p /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt81*.dtb /boot/dtb-${kver}
 cp -v System.map /boot/System.map-${kver}
-# start chromebook special - required: apt-get install vboot-kernel-utils
-cp /compile/doc/stable-mt/misc.mt7/misc/kernel.its .
-cp /compile/doc/stable-mt/misc.mt7/misc/cmdline .
-mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg || true
+# start chromebook special - required: apt-get install liblz4-tool vboot-kernel-utils
+cp arch/arm64/boot/Image Image
+lz4 -f Image Image.lz4
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
-vbutil_kernel --pack vmlinux.kpart --version 1 --vmlinuz vmlinux.uimg --arch aarch64 --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --config cmdline --bootloader bootloader.bin
-cp -v vmlinux.kpart /boot/vmlinux.kpart-${kver}
-rm -f kernel.its cmdline vmlinux.uimg bootloader.bin vmlinux.kpart
+cp /compile/doc/stable-mt/misc.mt7/misc/cmdline.elm cmdline
+mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb kernel.itb
+vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
+cp -v vmlinux.kpart /boot/vmlinux.kpart-elm-${kver}
+cp /compile/doc/stable-mt/misc.mt7/misc/cmdline.krane cmdline
+mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 -b arch/arm64/boot/dts/mediatek/mt8173-elm.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb -b arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb -b arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb -b arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dtb kernel.itb
+vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
+cp -v vmlinux.kpart /boot/vmlinux.kpart-krane-${kver}
+rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
 # end chromebook special
 cd /boot
 update-initramfs -c -k ${kver}
 #mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
-tar cvzf /compile/source/linux-stable-mt8173/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+tar cvzf /compile/source/linux-stable-mt/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
 cp -v /compile/doc/stable-mt/config.mt7 /compile/doc/stable-mt/config.mt7.old
-cp -v /compile/source/linux-stable-mt8173/.config /compile/doc/stable-mt/config.mt7
-cp -v /compile/source/linux-stable-mt8173/.config /compile/doc/stable-mt/config.mt7-${kver}
-cp -v /compile/source/linux-stable-mt8173/*.tar.gz /compile/result/stable-mt
+cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt7
+cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt7-${kver}
+cp -v /compile/source/linux-stable-mt/*.tar.gz /compile/result/stable-mt

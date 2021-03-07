@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /compile/source/linux-stable-mt8173
+cd /compile/source/linux-stable-mt
 
 for i in `cat /compile/doc/stable-mt/misc.mt7/options/docker-options-mod.txt`; do
   echo $i

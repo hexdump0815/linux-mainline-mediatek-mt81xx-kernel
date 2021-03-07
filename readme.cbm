@@ -4,11 +4,11 @@
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # name: stb-cbm
 
-# IMPORTANT: this is work in progress and not yet ready to use!
-# status: 5.10.1 works with wayland and latest mesa, xorg does not work
-#        5.10.20 works with wayland and xorg with latest mesa on krane, not working on elm
-#        5.10.17 without krane patches and misc.cbm/misc/alpine/config.cbm-5.10.17-stb-cbm+
-#                config should work on elm
+# INFO this is for the kukui krane chromebook, i.e. the lenovo duet chromebook and it
+#      might also work on the rk3399 based gru bob and gru kevin chromebooks
+# IMPORTANT: this is work in progress and not everything is working
+# status: 5.10.1  works with wayland and latest mesa on krane, xorg does not work
+#         5.10.20 works with wayland and xorg with latest mesa on krane, not working on elm
 # credits go to https://gitlab.freedesktop.org/icecream95/duet-kernel.git
 #        and to https://github.com/Maccraft123/Cadmium.git
 
@@ -18,14 +18,14 @@ for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.20/*.patch; do
   patch -p1 < $i
 done
 
-# patches for elm:
+# patches for elm (still included here to easily test when this kernel will work on elm too):
 # use a patch which removes even more high speed mmc modes as otherwise it gave errors for me
-#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed.patch
-patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc1-speed-reworked.patch
-patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-mmc-order.patch
+#patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc1-speed.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc1-speed-reworked.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc-order.patch
 # do not use this one - this gave spi-nor errors for me
-#patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/fix-spi-nor-max-frequency.patch
-patch -p1 < /compile/doc/stable-mt/misc.cbm/patches/alpine/higher-temps.patch
+#patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-spi-nor-max-frequency.patch
+patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/higher-temps.patch
 
 cp /compile/doc/stable-mt/config.cbm /compile/source/linux-stable-mt/.config
 cd /compile/source/linux-stable-mt
