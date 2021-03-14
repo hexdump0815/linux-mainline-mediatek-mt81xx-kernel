@@ -56,6 +56,7 @@ cp -v .config /boot/config-${kver}
 cp -v arch/arm64/boot/Image /boot/Image-${kver}
 mkdir -p /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt81*.dtb /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/rockchip/rk3399-gru-*.dtb /boot/dtb-${kver}
 cp -v System.map /boot/System.map-${kver}
 # start chromebook special - required: apt-get install liblz4-tool vboot-kernel-utils
 cp arch/arm64/boot/Image Image
