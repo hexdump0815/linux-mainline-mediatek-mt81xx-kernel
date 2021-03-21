@@ -7,13 +7,13 @@
 # INFO this is for the kukui krane chromebook, i.e. the lenovo duet chromebook and it
 #      might also work on the rk3399 based gru bob and gru kevin chromebooks
 # IMPORTANT: this is work in progress and not everything is working
-# status: 5.10.1  works with wayland and latest mesa on krane, xorg does not work
-#         5.10.20 works with wayland and xorg with latest mesa on krane, not working on elm
+# status: 5.10.1 works with wayland and latest mesa on krane, xorg does not work
+#         5.10.20+ works with wayland and xorg with latest mesa on krane, not working on elm
 # credits go to https://gitlab.freedesktop.org/icecream95/duet-kernel.git
 #        and to https://github.com/Maccraft123/Cadmium.git
 
 # patches for krane:
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.20/*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.25/*.patch; do
   echo === $i
   patch -p1 < $i
 done

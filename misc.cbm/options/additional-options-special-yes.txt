@@ -138,3 +138,5 @@ CONFIG_PWM_CROS_EC
 CONFIG_FRAMEBUFFER_CONSOLE_ROTATION
 # from working elm mainline config - the krane patches seem to remove this option though
 CONFIG_MTK_INFRACFG
+# ath6k wifi
+CONFIG_ATH6KL_DEBUG
