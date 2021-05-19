@@ -13,7 +13,12 @@
 #                    from branch: origin/topic/chromeos/somewhat-stable-5.12
 
 # patches:
-# none yet
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/gce-client.patch
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/mali-gpu.patch
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/panel-orientation.patch
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/panel-power.patch
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/thermal.patch
+patch -p1 < /compile/doc/stable-mt/misc.mup/patches/v5.12/drm.patch
 
 cp /compile/doc/stable-mt/config.mup /compile/source/linux-stable-mtup/.config
 cd /compile/source/linux-stable-mtup

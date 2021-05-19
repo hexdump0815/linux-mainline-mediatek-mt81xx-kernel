@@ -1,0 +1,402 @@
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH v13 1/4] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+Date: Wed, 21 Apr 2021 13:28:52 +0800
+
+Define a compatible string for the Mali Bifrost GPU found in
+Mediatek's MT8183 SoCs.
+
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+
+(no changes since v12)
+
+Changes in v12:
+ - binding: Fix min/maxItems logic (Rob Herring)
+
+Changes in v11:
+ - binding: power-domain-names not power-domainS-names
+
+Changes in v10:
+ - Fix the binding to make sure sram-supply property can be provided.
+
+Changes in v6:
+ - Rebased, actually tested with recent mesa driver.
+
+Changes in v5:
+ - Rename "2d" power domain to "core2"
+
+Changes in v4:
+ - Add power-domain-names description
+   (kept Alyssa's reviewed-by as the change is minor)
+
+ .../bindings/gpu/arm,mali-bifrost.yaml        | 30 ++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 184492162e7e..b22cd8f1b015 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -17,6 +17,7 @@ properties:
+     items:
+       - enum:
+           - amlogic,meson-g12a-mali
++          - mediatek,mt8183-mali
+           - realtek,rtd1619-mali
+           - rockchip,px30-mali
+       - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
+@@ -41,10 +42,13 @@ properties:
+ 
+   mali-supply: true
+ 
++  sram-supply: true
++
+   operating-points-v2: true
+ 
+   power-domains:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 3
+ 
+   resets:
+     maxItems: 2
+@@ -87,6 +91,30 @@ allOf:
+     then:
+       required:
+         - resets
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mediatek,mt8183-mali
++    then:
++      properties:
++        power-domains:
++          minItems: 3
++        power-domain-names:
++          items:
++            - const: core0
++            - const: core1
++            - const: core2
++
++      required:
++        - sram-supply
++        - power-domains
++        - power-domain-names
++    else:
++      properties:
++        power-domains:
++          maxItems: 1
++        sram-supply: false
+ 
+ examples:
+   - |
+-- 
+2.31.1.368.gbe11c130af-goog
+
+
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH v13 2/4] arm64: dts: mt8183: Add node for the Mali GPU
+Date: Wed, 21 Apr 2021 13:28:53 +0800
+
+Add a basic GPU node for mt8183.
+
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+The binding we use with out-of-tree Mali drivers includes more
+clocks, this is used for devfreq: the out-of-tree driver switches
+clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
+switches clk_mux back to clk_main_parent:
+(see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
+clocks =
+        <&topckgen CLK_TOP_MFGPLL_CK>,
+        <&topckgen CLK_TOP_MUX_MFG>,
+        <&clk26m>,
+        <&mfgcfg CLK_MFG_BG3D>;
+clock-names =
+        "clk_main_parent",
+        "clk_mux",
+        "clk_sub_parent",
+        "subsys_mfg_cg";
+(based on discussions, this probably belongs in the clock core)
+
+This only matters for devfreq, that is disabled anyway as we don't
+have platform-specific code to handle >1 supplies.
+
+(no changes since v12)
+
+Changes in v12:
+ - Add gpu node to mt8183-pumpkin.dts as well (Neil Armstrong).
+
+Changes in v11:
+ - mt8183*.dts: remove incorrect supply-names
+
+Changes in v6:
+ - Add gpu regulators to kukui dtsi as well.
+ - Power domains are now attached to spm, not scpsys
+ - Drop R-B.
+
+Changes in v5:
+ - Rename "2d" power domain to "core2" (keep R-B again).
+
+Changes in v4:
+ - Add power-domain-names to describe the 3 domains.
+   (kept Alyssa's reviewed-by as the change is minor)
+
+Changes in v2:
+ - Use sram instead of mali_sram as SRAM supply name.
+ - Rename mali@ to gpu@.
+
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   5 +
+ .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi |   5 +
+ .../boot/dts/mediatek/mt8183-pumpkin.dts      |   5 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 105 ++++++++++++++++++
+ 4 files changed, 120 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index edff1e03e6fe..7bc0a6a7fadf 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -42,6 +42,11 @@ &auxadc {
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&mt6358_vgpu_reg>;
++	sram-supply = <&mt6358_vsram_gpu_reg>;
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c_pins_0>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index ff56bcfa3370..e4e54be1c2b2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -279,6 +279,11 @@ dsi_out: endpoint {
+ 	};
+ };
+ 
++&gpu {
++	mali-supply = <&mt6358_vgpu_reg>;
++	sram-supply = <&mt6358_vsram_gpu_reg>;
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts b/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
+index 0aff5eb52e88..ee912825cfc6 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
+@@ -68,6 +68,11 @@ &auxadc {
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&mt6358_vgpu_reg>;
++	sram-supply = <&mt6358_vsram_gpu_reg>;
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c_pins_0>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c5e822b6b77a..c75fdeea8aa4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -1118,6 +1118,111 @@ mfgcfg: syscon@13000000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		gpu: gpu@13040000 {
++			compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
++			reg = <0 0x13040000 0 0x4000>;
++			interrupts =
++				<GIC_SPI 280 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 279 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "job", "mmu", "gpu";
++
++			clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
++
++			power-domains =
++				<&spm MT8183_POWER_DOMAIN_MFG_CORE0>,
++				<&spm MT8183_POWER_DOMAIN_MFG_CORE1>,
++				<&spm MT8183_POWER_DOMAIN_MFG_2D>;
++			power-domain-names = "core0", "core1", "core2";
++
++			operating-points-v2 = <&gpu_opp_table>;
++		};
++
++		gpu_opp_table: opp_table0 {
++			compatible = "operating-points-v2";
++			opp-shared;
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				opp-microvolt = <625000>, <850000>;
++			};
++
++			opp-320000000 {
++				opp-hz = /bits/ 64 <320000000>;
++				opp-microvolt = <631250>, <850000>;
++			};
++
++			opp-340000000 {
++				opp-hz = /bits/ 64 <340000000>;
++				opp-microvolt = <637500>, <850000>;
++			};
++
++			opp-360000000 {
++				opp-hz = /bits/ 64 <360000000>;
++				opp-microvolt = <643750>, <850000>;
++			};
++
++			opp-380000000 {
++				opp-hz = /bits/ 64 <380000000>;
++				opp-microvolt = <650000>, <850000>;
++			};
++
++			opp-400000000 {
++				opp-hz = /bits/ 64 <400000000>;
++				opp-microvolt = <656250>, <850000>;
++			};
++
++			opp-420000000 {
++				opp-hz = /bits/ 64 <420000000>;
++				opp-microvolt = <662500>, <850000>;
++			};
++
++			opp-460000000 {
++				opp-hz = /bits/ 64 <460000000>;
++				opp-microvolt = <675000>, <850000>;
++			};
++
++			opp-500000000 {
++				opp-hz = /bits/ 64 <500000000>;
++				opp-microvolt = <687500>, <850000>;
++			};
++
++			opp-540000000 {
++				opp-hz = /bits/ 64 <540000000>;
++				opp-microvolt = <700000>, <850000>;
++			};
++
++			opp-580000000 {
++				opp-hz = /bits/ 64 <580000000>;
++				opp-microvolt = <712500>, <850000>;
++			};
++
++			opp-620000000 {
++				opp-hz = /bits/ 64 <620000000>;
++				opp-microvolt = <725000>, <850000>;
++			};
++
++			opp-653000000 {
++				opp-hz = /bits/ 64 <653000000>;
++				opp-microvolt = <743750>, <850000>;
++			};
++
++			opp-698000000 {
++				opp-hz = /bits/ 64 <698000000>;
++				opp-microvolt = <768750>, <868750>;
++			};
++
++			opp-743000000 {
++				opp-hz = /bits/ 64 <743000000>;
++				opp-microvolt = <793750>, <893750>;
++			};
++
++			opp-800000000 {
++				opp-hz = /bits/ 64 <800000000>;
++				opp-microvolt = <825000>, <925000>;
++			};
++		};
++
+ 		mmsys: syscon@14000000 {
+ 			compatible = "mediatek,mt8183-mmsys", "syscon";
+ 			reg = <0 0x14000000 0 0x1000>;
+-- 
+2.31.1.368.gbe11c130af-goog
+
+
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH v13 4/4] drm/panfrost: Add mt8183-mali compatible string
+Date: Wed, 21 Apr 2021 13:28:55 +0800
+
+Add support for MT8183's G72 Bifrost.
+
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+---
+
+(no changes since v7)
+
+Changes in v7:
+ - Fix GPU ID in commit message
+
+Changes in v6:
+ - Context conflicts, reflow the code.
+ - Use ARRAY_SIZE for power domains too.
+
+Changes in v5:
+ - Change power domain name from 2d to core2.
+
+Changes in v4:
+ - Add power domain names.
+
+Changes in v3:
+ - Match mt8183-mali instead of bifrost, as we require special
+   handling for the 2 regulators and 3 power domains.
+
+ drivers/gpu/drm/panfrost/panfrost_drv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+index 83a461bdeea8..ca07098a6141 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -665,6 +665,15 @@ static const struct panfrost_compatible amlogic_data = {
+ 	.vendor_quirk = panfrost_gpu_amlogic_quirk,
+ };
+ 
++const char * const mediatek_mt8183_supplies[] = { "mali", "sram" };
++const char * const mediatek_mt8183_pm_domains[] = { "core0", "core1", "core2" };
++static const struct panfrost_compatible mediatek_mt8183_data = {
++	.num_supplies = ARRAY_SIZE(mediatek_mt8183_supplies),
++	.supply_names = mediatek_mt8183_supplies,
++	.num_pm_domains = ARRAY_SIZE(mediatek_mt8183_pm_domains),
++	.pm_domain_names = mediatek_mt8183_pm_domains,
++};
++
+ static const struct of_device_id dt_match[] = {
+ 	/* Set first to probe before the generic compatibles */
+ 	{ .compatible = "amlogic,meson-gxm-mali",
+@@ -681,6 +690,7 @@ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "arm,mali-t860", .data = &default_data, },
+ 	{ .compatible = "arm,mali-t880", .data = &default_data, },
+ 	{ .compatible = "arm,mali-bifrost", .data = &default_data, },
++	{ .compatible = "mediatek,mt8183-mali", .data = &mediatek_mt8183_data },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, dt_match);
+-- 
+2.31.1.368.gbe11c130af-goog
+
+
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
