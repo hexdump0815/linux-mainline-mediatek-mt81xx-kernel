@@ -2,6 +2,7 @@
 # - /compile/doc/stable-mt - the files in this dir
 # - /compile/source/linux-stable-mt - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
+# - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: stb-cbm
 
 # INFO this is for the kukui krane chromebook, i.e. the lenovo duet chromebook and it
@@ -27,15 +28,10 @@ patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-mmc-order.patch
 #patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/fix-spi-nor-max-frequency.patch
 patch -p1 < /compile/doc/stable-mt/misc.mt7/patches/higher-temps.patch
 
-cp /compile/doc/stable-mt/config.cbm /compile/source/linux-stable-mt/.config
-cd /compile/source/linux-stable-mt
-
 export ARCH=arm64
-make defconfig
-/compile/doc/stable-mt/misc.cbm/options/enable-docker-options.sh
-/compile/doc/stable-mt/misc.cbm/options/enable-additional-options.sh
-#/compile/doc/stable-mt/misc.cbm/options/remove-unused-options.sh
-make oldconfig
+scripts/kconfig/merge_config.sh -m arch/arm64/configs/defconfig /compile/doc/kernel-config-options/chromebooks-aarch64.cfg /compile/doc/kernel-config-options/mediatek.cfg /compile/doc/kernel-config-options/docker-options.cfg /compile/doc/kernel-config-options/options-to-remove-generic.cfg /compile/doc/stable-mt/misc.cbm/options/options-to-remove-special.cfg /compile/doc/kernel-config-options/additional-options-generic.cfg /compile/doc/kernel-config-options/additional-options-aarch64.cfg /compile/doc/stable-mt/misc.cbm/options/additional-options-special.cfg
+( cd /compile/doc/kernel-config-options ; git rev-parse --verify HEAD ) > /compile/doc/stable-mt/options.cbm
+make olddefconfig
 make -j 4 Image dtbs modules
 cd tools/perf
 make
