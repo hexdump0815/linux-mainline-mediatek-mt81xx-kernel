@@ -1,0 +1,169 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Return-Path: <SRS0=7C4w=K6=lists.infradead.org=linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58D0C4708F
+	for <linux-mediatek@archiver.kernel.org>; Fri,  4 Jun 2021 09:41:23 +0000 (UTC)
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id B00D4613FF
+	for <linux-mediatek@archiver.kernel.org>; Fri,  4 Jun 2021 09:41:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org B00D4613FF
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=mediatek.com
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=q2us2aYjDqzzLhqhSCjjALGkiAqgF19ZXGtsSa2fbOI=; b=D1yku/bjefv2/W
+	kF17nltV2HHC5ttTOm/vFp+9LrTyrH37YewzDvmkRCINDxosE35h3Ou1jsBbDRuASuWbhwa9kzZGL
+	balonZkh1lxQJ92x751T23ZzbVDmJeR7Xw87XVQDtb0vCqNrkLsMlCdTKEPnSqkmX2SbfvWq4GBTd
+	pAcej0vMumSOf4f1s3PEOhwBgSBUW/74QIt1Uw6H8Q1G97uC0f02SgU2I+WQIR+rDl5WU0wODKs6K
+	tSO2vsDUVKwxSJM32ggXlH5Oa3S1PfVC+gK25TrBlmbXkLh2WvCq6U1L1qpQawLADeTZYq+sCNFdC
+	BUaoqvMs2rf32/P6jGeg==;
+Received: from localhost ([::1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1lp6KG-00Cgow-7a; Fri, 04 Jun 2021 09:41:12 +0000
+Received: from mailgw01.mediatek.com ([216.200.240.184])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lp6K6-00Cgk3-LZ; Fri, 04 Jun 2021 09:41:09 +0000
+X-UUID: 3f9fab2c28e848d4951a051154538ead-20210604
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com;
+ s=dk; 
+ h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From;
+ bh=4QdC8QWUA/05R4ZTAFs8IDam3VuZ9uqY28YTYC8Y5AU=; 
+ b=T+2j8rhfHj/5PK9pYk1HXuQtJrxciNfUeTaeDKOS79lRzgpm6NMiIfPw5YqwQMRc2E1aVa3HBuSfvkSaGtsV9ljAp/KSvu93+tWaOAscEK6Op9LBwERDWeOZXZSOobHFN3nP9afWHBUCPGkaEAXvJHa+ONyUb2BXGmlQ1Bd3fCo=;
+X-UUID: 3f9fab2c28e848d4951a051154538ead-20210604
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+ (envelope-from <ben.tseng@mediatek.com>)
+ (musrelay.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+ with ESMTP id 1896466274; Fri, 04 Jun 2021 02:40:54 -0700
+Received: from mtkmbs07n1.mediatek.inc (172.21.101.16) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 4 Jun 2021 02:37:58 -0700
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 4 Jun 2021 17:37:56 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via
+ Frontend Transport; Fri, 4 Jun 2021 17:37:56 +0800
+From: Ben Tseng <ben.tseng@mediatek.com>
+To: Fan Chen <fan.chen@mediatek.com>, Zhang Rui <rui.zhang@intel.com>, "Daniel
+ Lezcano" <daniel.lezcano@linaro.org>, <linux-pm@vger.kernel.org>,
+ <srv_heupstream@mediatek.com>
+CC: Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, <hsinyi@chromium.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>, 
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>, Michael Kao
+ <michael.kao@mediatek.com>, Ben Tseng <ben.tseng@mediatek.com>
+Subject: [PATCH v3] arm64: dts: mt8183-kukui: Add tboard thermal zones
+Date: Fri, 4 Jun 2021 17:37:55 +0800
+Message-ID: <20210604093755.13288-1-ben.tseng@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+X-MTK: N
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20210604_024104_177464_CD96F28A 
+X-CRM114-Status: GOOD (  14.50  )
+X-BeenThere: linux-mediatek@lists.infradead.org
+X-Mailman-Version: 2.1.34
+Precedence: list
+List-Id: <linux-mediatek.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>, 
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek@lists.infradead.org>
+List-Help: <mailto:linux-mediatek-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>, 
+ <mailto:linux-mediatek-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "Linux-mediatek" <linux-mediatek-bounces@lists.infradead.org>
+Errors-To: linux-mediatek-bounces+linux-mediatek=archiver.kernel.org@lists.infradead.org
+List-Archive: <https://lore.kernel.org/linux-mediatek/>
+
+From: Michael Kao <michael.kao@mediatek.com>
+
+Add tboard thermal zones.
+The tboard thermal sensors are a kind of NTC sensors which are located
+on PCB board to correlate the temperature of the case (Tskin).
+
+pull-up voltage: 1800 mv
+pull-up resistor: 75K
+
+Vsense = pull-up voltage * Rntc / ( pull-up resistor + Rntc )
+AuxIn = Vsense * 4096 / 1500
+
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+Signed-off-by: Ben Tseng <ben.tseng@mediatek.com>
+Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+
+---
+Change in v3:
+        - Modify Tboard to tbaord in mt8183-kukui.dtsi
+        - Add more description about tboard thermal sensor
+
+Change in v2:
+        - Rebase to kernel-v5.13-rc1
+        - Resend
+---
+ arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 14 ++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi       |  2 +-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index ff56bcf..601f866 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -847,6 +847,20 @@
+ 	status = "okay";
+ };
+ 
++&thermal_zones {
++	tboard1 {
++		polling-delay = <1000>; /* milliseconds */
++		polling-delay-passive = <0>; /* milliseconds */
++		thermal-sensors = <&tboard_thermistor1>;
++	};
++
++	tboard2 {
++		polling-delay = <1000>; /* milliseconds */
++		polling-delay-passive = <0>; /* milliseconds */
++		thermal-sensors = <&tboard_thermistor2>;
++	};
++};
++
+ &u3phy {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c5e822b..4173a5d 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -673,7 +673,7 @@
+ 			nvmem-cell-names = "calibration-data";
+ 		};
+ 
+-		thermal-zones {
++		thermal_zones: thermal-zones {
+ 			cpu_thermal: cpu_thermal {
+ 				polling-delay-passive = <100>;
+ 				polling-delay = <500>;
+-- 
+1.8.1.1.dirty
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
