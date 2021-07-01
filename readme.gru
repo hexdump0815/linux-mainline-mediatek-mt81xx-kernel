@@ -3,16 +3,12 @@
 # - /compile/source/linux-stable-mt - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
-# name: stb-mt7
+# name: stb-gru
 
-# INFO this is for mt8173 based chromebooks - see also readme.cbm
+# INFO this is for rockchip rk3399 based chromebooks - see also readme.cbm
 
-# patches for mt8173/oak
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.0/mt8173*.patch; do
-  echo === $i
-  patch -p1 < $i
-done
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.0/mt81xx*.patch; do
+# patches for rk3399/gru
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.0/rk3399*.patch; do
   echo === $i
   patch -p1 < $i
 done
@@ -21,7 +17,7 @@ export ARCH=arm64
 scripts/kconfig/merge_config.sh -m arch/arm64/configs/defconfig /compile/doc/kernel-config-options/chromebooks-aarch64.cfg /compile/doc/kernel-config-options/mediatek.cfg /compile/doc/kernel-config-options/docker-options.cfg /compile/doc/kernel-config-options/options-to-remove-generic.cfg /compile/doc/stable-mt/misc.cbm/options/options-to-remove-special.cfg /compile/doc/kernel-config-options/additional-options-generic.cfg /compile/doc/kernel-config-options/additional-options-aarch64.cfg /compile/doc/stable-mt/misc.cbm/options/additional-options-special.cfg
 ( cd /compile/doc/kernel-config-options ; git rev-parse --verify HEAD ) > /compile/doc/stable-mt/misc.cbm/options/kernel-config-options.version
 make olddefconfig
-./scripts/config --set-str CONFIG_LOCALVERSION "-stb-mt7"
+./scripts/config --set-str CONFIG_LOCALVERSION "-stb-gru"
 make -j 4 Image dtbs modules
 cd tools/perf
 make
@@ -58,7 +54,7 @@ cd /boot
 update-initramfs -c -k ${kver}
 #mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
 tar cvzf /compile/source/linux-stable-mt/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
-cp -v /compile/doc/stable-mt/config.mt7 /compile/doc/stable-mt/config.mt7.old
-cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt7
-cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt7-${kver}
+cp -v /compile/doc/stable-mt/config.gru /compile/doc/stable-mt/config.gru.old
+cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.gru
+cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.gru-${kver}
 cp -v /compile/source/linux-stable-mt/*.tar.gz /compile/result/stable-mt
