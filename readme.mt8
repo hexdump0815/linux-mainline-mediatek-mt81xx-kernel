@@ -7,12 +7,14 @@
 
 # INFO this is for mt8183 based chromebooks - see also readme.cbm
 
+cd /compile/source/linux-stable-mt
+
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.0/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.0/mt81xx*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt81xx*.patch; do
   echo === $i
   patch -p1 < $i
 done
