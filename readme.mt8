@@ -59,7 +59,7 @@ rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
 cd /boot
 update-initramfs -c -k ${kver}
 #mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
-tar cvzf /compile/source/linux-stable-mt/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+tar cvzf /compile/source/linux-stable-mt/${kver}.tar.gz /boot/Image-${kver} /boot/System.map-${kver} /boot/config-${kver} /boot/dtb-${kver} /boot/initrd.img-${kver} /boot/vmlinux.kpart-${kver} /lib/modules/${kver}
 cp -v /compile/doc/stable-mt/config.mt8 /compile/doc/stable-mt/config.mt8.old
 cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt8
 cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt8-${kver}
