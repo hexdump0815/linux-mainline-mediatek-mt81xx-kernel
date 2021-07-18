@@ -1,0 +1,73 @@
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index c272b290fa73..623e822db782 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -9073,9 +9073,9 @@ static void ath10k_mac_get_rate_flags_ht(struct ath10k *ar, u32 rate, u8 nss, u8
+ 	} else if (rate == mcs_rate[index].supported_rate[3]) {
+ 		*bw |= RATE_INFO_BW_40;
+ 		*flags |= RATE_INFO_FLAGS_SHORT_GI;
+-	} else {
+-		ath10k_warn(ar, "invalid ht params rate %d 100kbps nss %d mcs %d",
+-			    rate, nss, mcs);
++//	} else {
++//		ath10k_warn(ar, "invalid ht params rate %d 100kbps nss %d mcs %d",
++//			    rate, nss, mcs);
+ 	}
+ }
+ 
+@@ -9103,9 +9103,9 @@ static void ath10k_mac_get_rate_flags_vht(struct ath10k *ar, u32 rate, u8 nss, u
+ 	} else if (rate == mcs_rate[mcs].supported_VHT20_rate[1]) {
+ 		*bw = RATE_INFO_BW_20;
+ 		*flags |= RATE_INFO_FLAGS_SHORT_GI;
+-	} else {
+-		ath10k_warn(ar, "invalid vht params rate %d 100kbps nss %d mcs %d",
+-			    rate, nss, mcs);
++//	} else {
++//		ath10k_warn(ar, "invalid vht params rate %d 100kbps nss %d mcs %d",
++//			    rate, nss, mcs);
+ 	}
+ }
+ 
+diff --git a/sound/soc/codecs/ts3a227e.c b/sound/soc/codecs/ts3a227e.c
+index 962f5d48378a..816175398aa4 100644
+--- a/sound/soc/codecs/ts3a227e.c
++++ b/sound/soc/codecs/ts3a227e.c
+@@ -195,7 +195,7 @@ static irqreturn_t ts3a227e_interrupt(int irq, void *data)
+ 	/* Check for plug/unplug. */
+ 	ret = regmap_read(regmap, TS3A227E_REG_INTERRUPT, &int_reg);
+ 	if (ret) {
+-		dev_err(dev, "failed to clear interrupt ret=%d\n", ret);
++//		dev_err(dev, "failed to clear interrupt ret=%d\n", ret);
+ 		return IRQ_NONE;
+ 	}
+ 
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 30e9e680c74c..8cdc14d69ec3 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1570,8 +1570,8 @@ int usb_set_interface(struct usb_device *dev, int interface, int alternate)
+ 
+ 	ret = usb_hcd_alloc_bandwidth(dev, NULL, iface->cur_altsetting, alt);
+ 	if (ret < 0) {
+-		dev_info(&dev->dev, "Not enough bandwidth for altsetting %d\n",
+-				alternate);
++//		dev_info(&dev->dev, "Not enough bandwidth for altsetting %d\n",
++//				alternate);
+ 		usb_enable_lpm(dev);
+ 		mutex_unlock(hcd->bandwidth_mutex);
+ 		return ret;
+diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
+index 8b90da5a6ed1..5b65d784e930 100644
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -802,8 +806,8 @@ int xhci_mtk_check_bandwidth(struct usb_hcd *hcd, struct usb_device *udev)
+ 
+ 		ret = check_sch_bw(sch_bw, sch_ep);
+ 		if (ret) {
+-			xhci_err(xhci, "Not enough bandwidth! (%s)\n",
+-				 sch_error_string(-ret));
++//			xhci_err(xhci, "Not enough bandwidth! (%s)\n",
++//				 sch_error_string(-ret));
+ 			return -ENOSPC;
+ 		}
+ 	}
