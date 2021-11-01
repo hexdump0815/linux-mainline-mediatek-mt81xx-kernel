@@ -9,18 +9,8 @@
 
 cd /compile/source/linux-stable-mt
 
-# # patches for mt8173/oak - for v5.13 - not yet used due to suspend/resume issues
-# for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt8173*.patch; do
-#   echo === $i
-#   patch -p1 < $i
-# done
-# for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt81xx*.patch; do
-#   echo === $i
-#   patch -p1 < $i
-# done
-
-# patches for mt8173/oak - for v5.10
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.50/mt8173*.patch; do
+# patches for mt8173/oak
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.15.0/mt8173*.patch; do
   echo === $i
   patch -p1 < $i
 done

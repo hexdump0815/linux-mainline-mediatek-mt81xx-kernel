@@ -10,18 +10,10 @@
 cd /compile/source/linux-stable-mt
 
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.15.0/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.13.2/mt81xx*.patch; do
-  echo === $i
-  patch -p1 < $i
-done
-
-# add additional dts files from v5.14
-cp -v /compile/doc/stable-mt/misc.cbm/misc/v5.14-dts/*.dts* arch/arm64/boot/dts/mediatek
-patch -p1 < /compile/doc/stable-mt/misc.cbm/misc/v5.14-dts/add-v5.14-dts-files.patch
 
 export ARCH=arm64
 scripts/kconfig/merge_config.sh -m arch/arm64/configs/defconfig /compile/doc/kernel-config-options/chromebooks-aarch64.cfg /compile/doc/kernel-config-options/mediatek.cfg /compile/doc/kernel-config-options/docker-options.cfg /compile/doc/kernel-config-options/options-to-remove-generic.cfg /compile/doc/stable-mt/misc.cbm/options/options-to-remove-special.cfg /compile/doc/kernel-config-options/additional-options-generic.cfg /compile/doc/kernel-config-options/additional-options-aarch64.cfg /compile/doc/stable-mt/misc.cbm/options/additional-options-special.cfg
