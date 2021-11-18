@@ -1,13 +1,13 @@
 # directories:
 # - /compile/doc/stable-mt - the files in this dir
-# - /compile/source/linux-stable-mt - the kernel sources checked out from gitrepo
+# - /compile/source/linux-stable-mt8 - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: stb-mt8
 
 # INFO this is for mt8183 based chromebooks - see also readme.cbm
 
-cd /compile/source/linux-stable-mt
+cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
 for i in /compile/doc/stable-mt/misc.cbm/patches/5.15.0/mt8183*.patch; do
@@ -54,8 +54,8 @@ rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
 cd /boot
 update-initramfs -c -k ${kver}
 #mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
-tar cvzf /compile/source/linux-stable-mt/${kver}.tar.gz /boot/Image-${kver} /boot/System.map-${kver} /boot/config-${kver} /boot/dtb-${kver} /boot/initrd.img-${kver} /boot/vmlinux.kpart-${kver} /lib/modules/${kver}
+tar cvzf /compile/source/linux-stable-mt8/${kver}.tar.gz /boot/Image-${kver} /boot/System.map-${kver} /boot/config-${kver} /boot/dtb-${kver} /boot/initrd.img-${kver} /boot/vmlinux.kpart-${kver} /lib/modules/${kver}
 cp -v /compile/doc/stable-mt/config.mt8 /compile/doc/stable-mt/config.mt8.old
-cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt8
-cp -v /compile/source/linux-stable-mt/.config /compile/doc/stable-mt/config.mt8-${kver}
-cp -v /compile/source/linux-stable-mt/*.tar.gz /compile/result/stable-mt
+cp -v /compile/source/linux-stable-mt8/.config /compile/doc/stable-mt/config.mt8
+cp -v /compile/source/linux-stable-mt8/.config /compile/doc/stable-mt/config.mt8-${kver}
+cp -v /compile/source/linux-stable-mt8/*.tar.gz /compile/result/stable-mt

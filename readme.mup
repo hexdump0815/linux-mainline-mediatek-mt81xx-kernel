@@ -1,6 +1,6 @@
 # directories:
 # - /compile/doc/stable-mt - the files in this dir
-# - /compile/source/linux-stable-mtup - the kernel sources checked out from gitrepo
+# - /compile/source/linux-stable-mup - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mtup - the resulting kernel, modules etc. tar.gz files
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: stb-mup
@@ -66,8 +66,8 @@ rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
 cd /boot
 update-initramfs -c -k ${kver}
 #mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
-tar cvzf /compile/source/linux-stable-mtup/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+tar cvzf /compile/source/linux-stable-mup/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
 cp -v /compile/doc/stable-mt/config.mup /compile/doc/stable-mt/config.mup.old
-cp -v /compile/source/linux-stable-mtup/.config /compile/doc/stable-mt/config.mup
-cp -v /compile/source/linux-stable-mtup/.config /compile/doc/stable-mt/config.mup-${kver}
-cp -v /compile/source/linux-stable-mtup/*.tar.gz /compile/result/stable-mt
+cp -v /compile/source/linux-stable-mup/.config /compile/doc/stable-mt/config.mup
+cp -v /compile/source/linux-stable-mup/.config /compile/doc/stable-mt/config.mup-${kver}
+cp -v /compile/source/linux-stable-mup/*.tar.gz /compile/result/stable-mt
