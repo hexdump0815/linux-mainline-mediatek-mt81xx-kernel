@@ -5,3 +5,6 @@ for mtup:
 origin  https://github.com/eballetbo/linux.git (fetch)
 origin  https://github.com/eballetbo/linux.git (push)
 branch: topic/chromeos/somewhat-stable-5.11
+
+maybe more up to date as the above:
+https://gitlab.collabora.com/eballetbo/linux/
