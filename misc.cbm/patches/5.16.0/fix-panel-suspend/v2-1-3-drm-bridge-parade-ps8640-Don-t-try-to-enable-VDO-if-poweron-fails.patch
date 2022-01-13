@@ -1,0 +1,82 @@
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     a.hajda@samsung.com
+Cc:     narmstrong@baylibre.com, robert.foss@linaro.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v2 1/3] drm/bridge: parade-ps8640: Don't try to enable VDO if poweron fails
+Date:   Tue,  2 Nov 2021 10:36:16 +0100
+X-Mailing-List: linux-kernel@vger.kernel.org
+
+If the bridge cannot get powered on, there's no reason to try to
+communicate with it: change the ps8640_bridge_poweron function to
+return an error value to the caller, so that we can avoid calling
+ps8640_bridge_vdo_control() in ps8640_pre_enable() if the poweron
+sequence fails.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/gpu/drm/bridge/parade-ps8640.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+index 4b36e4dc78f1..8c5402947b3c 100644
+--- a/drivers/gpu/drm/bridge/parade-ps8640.c
++++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+@@ -293,19 +293,19 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
+ 	return 0;
+ }
+ 
+-static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
++static int ps8640_bridge_poweron(struct ps8640 *ps_bridge)
+ {
+ 	struct regmap *map = ps_bridge->regmap[PAGE2_TOP_CNTL];
+ 	int ret, status;
+ 
+ 	if (ps_bridge->powered)
+-		return;
++		return 0;
+ 
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
+ 				    ps_bridge->supplies);
+ 	if (ret < 0) {
+ 		DRM_ERROR("cannot enable regulators %d\n", ret);
+-		return;
++		return ret;
+ 	}
+ 
+ 	gpiod_set_value(ps_bridge->gpio_powerdown, 0);
+@@ -352,11 +352,13 @@ static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
+ 
+ 	ps_bridge->powered = true;
+ 
+-	return;
++	return 0;
+ 
+ err_regulators_disable:
+ 	regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
+ 			       ps_bridge->supplies);
++
++	return ret;
+ }
+ 
+ static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
+@@ -381,7 +383,9 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
+ 	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+ 	int ret;
+ 
+-	ps8640_bridge_poweron(ps_bridge);
++	ret = ps8640_bridge_poweron(ps_bridge);
++	if (ret)
++		return;
+ 
+ 	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
+ 	if (ret < 0)
+-- 
+2.33.1
+
+

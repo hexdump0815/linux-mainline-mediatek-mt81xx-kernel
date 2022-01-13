@@ -1,0 +1,39 @@
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     a.hajda@samsung.com
+Cc:     narmstrong@baylibre.com, robert.foss@linaro.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH] drm/bridge: parade-ps8640: Assign drm_device to dp aux channel
+Date:   Thu,  4 Nov 2021 11:20:35 +0100
+X-Mailing-List: linux-kernel@vger.kernel.org
+
+As it was done with other bridge drivers and to solve a warning coming
+from drm_dp_aux_register(), add a backpointer to drm_device in the
+drm_dp_aux that we're registering.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/gpu/drm/bridge/parade-ps8640.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+index 191cc196c9d1..20d8e606d543 100644
+--- a/drivers/gpu/drm/bridge/parade-ps8640.c
++++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+@@ -455,6 +455,7 @@ static int ps8640_bridge_attach(struct drm_bridge *bridge,
+ 		goto err_dsi_attach;
+ 	}
+ 
++	ps_bridge->aux.drm_dev = bridge->dev;
+ 	ret = drm_dp_aux_register(&ps_bridge->aux);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register DP AUX channel: %d\n", ret);
+-- 
+2.33.1
+
+
