@@ -1,0 +1,21 @@
+--- linux-kukui/drivers/usb/host/xhci-mtk-sch.c	2021-07-12 00:07:40.000000000 +0200
++++ linux-kukui-fixed/drivers/usb/host/xhci-mtk-sch.c	2021-07-14 05:54:11.185260151 +0200
+@@ -385,13 +385,17 @@
+ 		} else { /* INT_IN_EP or ISOC_IN_EP */
+ 			bwb_table[0] = 0; /* start split */
+ 			bwb_table[1] = 0; /* idle */
++
++			sch_ep->num_budget_microframes += 2;
++			if (sch_ep->num_budget_microframes > sch_ep->esit)
++				sch_ep->num_budget_microframes = sch_ep->esit;
+ 			/*
+ 			 * due to cs_count will be updated according to cs
+ 			 * position, assign all remainder budget array
+ 			 * elements as @bw_cost_per_microframe, but only first
+ 			 * @num_budget_microframes elements will be used later
+ 			 */
+-			for (i = 2; i < TT_MICROFRAMES_MAX; i++)
++			for (i = 2; i < sch_ep->num_budget_microframes; i++)
+ 				bwb_table[i] =	sch_ep->bw_cost_per_microframe;
+ 		}
+ 	}
