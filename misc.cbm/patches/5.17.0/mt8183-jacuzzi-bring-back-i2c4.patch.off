@@ -1,0 +1,16 @@
+revert https://github.com/gregkh/linux/commit/2706707b225d29aae6f79a21eff277b53b7b05e9i - it seems to break the panel on jacuzzi
+
+it looks like it is not really the case for the breakage, so keep it off for now
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+index 8f7bf33f607d..d8826c82bcda 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+@@ -9,6 +9,7 @@ / {
+ 	panel: panel {
+ 		compatible = "auo,b116xw03";
+ 		power-supply = <&pp3300_panel>;
++		ddc-i2c-bus = <&i2c4>;
+ 		backlight = <&backlight_lcd0>;
+ 
+ 		port {

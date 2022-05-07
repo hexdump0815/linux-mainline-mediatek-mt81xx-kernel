@@ -133,8 +133,8 @@ index 7631f76e7f34..7189baaabf41 100644
  EXPORT_SYMBOL(drm_connector_set_panel_orientation);
 @@ -2225,7 +2217,7 @@ EXPORT_SYMBOL(drm_connector_set_panel_orientation);
  /**
-  * drm_connector_set_panel_orientation_with_quirk -
-  *	set the connector's panel_orientation after checking for quirks
+  * drm_connector_set_panel_orientation_with_quirk - set the
+  *	connector's panel_orientation after checking for quirks
 - * @connector: connector for which to init the panel-orientation property.
 + * @connector: connector for which to set the panel-orientation property.
   * @panel_orientation: drm_panel_orientation value to set
@@ -211,12 +211,12 @@ index 9bee99fe5495..853855482af1 100644
 +++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
 @@ -1632,6 +1632,7 @@ static void vlv_dsi_add_properties(struct intel_connector *connector)
  
- 		connector->base.state->scaling_mode = DRM_MODE_SCALE_ASPECT;
+ 	connector->base.state->scaling_mode = DRM_MODE_SCALE_ASPECT;
  
-+		drm_connector_init_panel_orientation_property(&connector->base);
- 		drm_connector_set_panel_orientation_with_quirk(
- 				&connector->base,
- 				intel_dsi_get_panel_orientation(connector),
++	drm_connector_init_panel_orientation_property(&connector->base);
+ 	drm_connector_set_panel_orientation_with_quirk(&connector->base,
+ 						       intel_dsi_get_panel_orientation(connector),
+ 						       connector->panel.fixed_mode->hdisplay,
 diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
 index 1922b278ffad..4396c1c4a5db 100644
 --- a/include/drm/drm_connector.h
