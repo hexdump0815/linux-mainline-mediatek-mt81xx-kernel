@@ -11,6 +11,8 @@ cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
 for i in /compile/doc/stable-mt/misc.cbm/patches/5.15.0/mt8183*.patch; do
+# v5.18 looks very promising - all seems to work so far
+#for i in /compile/doc/stable-mt/misc.cbm/patches/5.18.0/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
