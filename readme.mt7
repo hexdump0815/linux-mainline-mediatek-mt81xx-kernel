@@ -10,7 +10,9 @@
 cd /compile/source/linux-stable-mt7
 
 # patches for mt8173/oak
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.15.0/mt8173*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.10.0/mt8173*.patch; do
+# v5.18 is quite useable already except dpms resume not working
+#for i in /compile/doc/stable-mt/misc.cbm/patches/5.18.0/mt8173*.patch; do
   echo === $i
   patch -p1 < $i
 done
