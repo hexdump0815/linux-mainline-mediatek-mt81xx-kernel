@@ -1,3 +1,5 @@
+removes a dapm sound route, that prevents loading the kernel module
+
 --- a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
 +++ b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
 @@ -590,7 +590,7 @@
