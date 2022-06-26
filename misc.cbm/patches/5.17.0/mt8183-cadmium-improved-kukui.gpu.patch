@@ -1,0 +1,39 @@
+this patch is based on:
+
+https://pastebin.com/kwNHAdhu
+via: https://oftc.irclog.whitequark.org/panfrost/2022-05-09#30915485
+
+as it is supposed to be an improved version of the older and known to
+be broken gpu freq scaling code from cadmium
+
+diff -Nur linux-kukui/arch/arm64/boot/dts/mediatek/mt8183.dtsi linux-kukui-gud/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+--- linux-kukui/arch/arm64/boot/dts/mediatek/mt8183.dtsi	2021-07-13 17:16:13.752666183 +0200
++++ linux-kukui-gud/arch/arm64/boot/dts/mediatek/mt8183.dtsi	2021-07-13 17:01:43.516154051 +0200
+@@ -1581,7 +1581,15 @@
+ 				<GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-names = "job", "mmu", "gpu";
+ 
+-			clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
++			clocks = <&topckgen CLK_TOP_MFGPLL_CK>,
++				 <&topckgen CLK_TOP_MUX_MFG>,
++				 <&clk26m>,
++				 <&mfgcfg CLK_MFG_BG3D>;
++			clock-names =
++				 "clk_main_parent",
++				 "clk_mux",
++				 "clk_sub_parent",
++				 "subsys_mfg_cg";
+ 
+ 			power-domains =
+ 				<&spm MT8183_POWER_DOMAIN_MFG_CORE0>,
+diff -Nur linux-kukui/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi linux-kukui-gud/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+--- linux-kukui/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi	2021-07-13 17:16:13.756666129 +0200
++++ linux-kukui-gud/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi	2021-07-13 16:53:12.906778709 +0200
+@@ -295,6 +295,7 @@
+ };
+ 
+ &gpu {
++	supply-names = "mali", "sram";
+ 	mali-supply = <&mt6358_vgpu_reg>;
+ 	sram-supply = <&mt6358_vsram_gpu_reg>;
+ };

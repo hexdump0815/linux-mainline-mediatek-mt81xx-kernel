@@ -1,0 +1,72 @@
+from: https://lore.kernel.org/all/20220422084720.959271-1-xji@analogixsemi.com/
+      "[PATCH v2 1/4] media/v4l2-core: Add enum V4L2_FWNODE_BUS_TYPE_DPI"
+
+thanks to wens from the #linux-mediatek irc for pointing me to this patch
+
+As V4L2_FWNODE_BUS_TYPE_PARALLEL is not used for DPI interface, this
+patch add V4L2_FWNODE_BUS_TYPE_DPI for video DPI interface.
+
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ drivers/media/v4l2-core/v4l2-fwnode.c | 4 ++++
+ include/media/v4l2-fwnode.h           | 2 ++
+ include/media/v4l2-mediabus.h         | 2 ++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index afceb35e500c..3d85a8600f57 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -61,6 +61,10 @@ static const struct v4l2_fwnode_bus_conv {
+ 		V4L2_FWNODE_BUS_TYPE_BT656,
+ 		V4L2_MBUS_BT656,
+ 		"Bt.656",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_DPI,
++		V4L2_MBUS_DPI,
++		"DPI",
+ 	}
+ };
+ 
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index feb132df45a3..15e4ab672223 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -173,6 +173,7 @@ struct v4l2_fwnode_connector {
+  * @V4L2_FWNODE_BUS_TYPE_CSI2_DPHY: MIPI CSI-2 bus, D-PHY physical layer
+  * @V4L2_FWNODE_BUS_TYPE_PARALLEL: Camera Parallel Interface bus
+  * @V4L2_FWNODE_BUS_TYPE_BT656: BT.656 video format bus-type
++ * @V4L2_FWNODE_BUS_TYPE_DPI: Video Parallel Interface bus
+  * @NR_OF_V4L2_FWNODE_BUS_TYPE: Number of bus-types
+  */
+ enum v4l2_fwnode_bus_type {
+@@ -183,6 +184,7 @@ enum v4l2_fwnode_bus_type {
+ 	V4L2_FWNODE_BUS_TYPE_CSI2_DPHY,
+ 	V4L2_FWNODE_BUS_TYPE_PARALLEL,
+ 	V4L2_FWNODE_BUS_TYPE_BT656,
++	V4L2_FWNODE_BUS_TYPE_DPI,
+ 	NR_OF_V4L2_FWNODE_BUS_TYPE
+ };
+ 
+diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+index e0db3bcff9ed..f67a74daf799 100644
+--- a/include/media/v4l2-mediabus.h
++++ b/include/media/v4l2-mediabus.h
+@@ -129,6 +129,7 @@ struct v4l2_mbus_config_mipi_csi1 {
+  * @V4L2_MBUS_CCP2:	CCP2 (Compact Camera Port 2)
+  * @V4L2_MBUS_CSI2_DPHY: MIPI CSI-2 serial interface, with D-PHY
+  * @V4L2_MBUS_CSI2_CPHY: MIPI CSI-2 serial interface, with C-PHY
++ * @V4L2_MBUS_DPI:      MIPI VIDEO DPI interface
+  * @V4L2_MBUS_INVALID:	invalid bus type (keep as last)
+  */
+ enum v4l2_mbus_type {
+@@ -139,6 +140,7 @@ enum v4l2_mbus_type {
+ 	V4L2_MBUS_CCP2,
+ 	V4L2_MBUS_CSI2_DPHY,
+ 	V4L2_MBUS_CSI2_CPHY,
++	V4L2_MBUS_DPI,
+ 	V4L2_MBUS_INVALID,
+ };
+ 
+-- 
+2.25.1
