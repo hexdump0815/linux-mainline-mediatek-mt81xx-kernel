@@ -11,13 +11,13 @@
 cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/5.18.0/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/5.19.0/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # apply the multi gen lru kernel extra patches
-for i in /compile/doc/kernel-extra-patches/multi-gen-lru/v11/*.diff; do
+for i in /compile/doc/kernel-extra-patches/multi-gen-lru/v13/*.diff; do
   echo === $i
   patch -p1 < $i
 done
