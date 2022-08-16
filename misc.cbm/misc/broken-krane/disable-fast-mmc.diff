@@ -1,0 +1,51 @@
+disabling of the higher speed mmc modes to make booting fail less often due to mmc errors on my broken krane ...
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index 0f9480f91261..3b24d330878a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -348,14 +354,16 @@ &mmc0 {
+ 	pinctrl-0 = <&mmc0_pins_default>;
+ 	pinctrl-1 = <&mmc0_pins_uhs>;
+ 	bus-width = <8>;
+-	max-frequency = <200000000>;
++//	max-frequency = <200000000>;
++	max-frequency = <100000000>;
++	host-power-on-delay-ms = <32>;
+ 	cap-mmc-highspeed;
+ 	mmc-hs200-1_8v;
+-	mmc-hs400-1_8v;
++//	mmc-hs400-1_8v;
+ 	cap-mmc-hw-reset;
+ 	no-sdio;
+ 	no-sd;
+-	hs400-ds-delay = <0x12814>;
++//	hs400-ds-delay = <0x12814>;
+ 	vmmc-supply = <&mt6358_vemc_reg>;
+ 	vqmmc-supply = <&mt6358_vio18_reg>;
+ 	assigned-clocks = <&topckgen CLK_TOP_MUX_MSDC50_0>;
+@@ -372,11 +380,12 @@ &mmc1 {
+ 	vqmmc-supply = <&mmc1_fixed_io>;
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+-	max-frequency = <200000000>;
++//	max-frequency = <200000000>;
++	max-frequency = <100000000>;
+ 	drv-type = <2>;
+ 	cap-sd-highspeed;
+ 	sd-uhs-sdr50;
+-	sd-uhs-sdr104;
++//	sd-uhs-sdr104;
+ 	keep-power-in-suspend;
+ 	enable-sdio-wakeup;
+ 	cap-sdio-irq;
+@@ -865,7 +874,8 @@ &spi2 {
+ 	cros_ec: cros-ec@0 {
+ 		compatible = "google,cros-ec-spi";
+ 		reg = <0>;
+-		spi-max-frequency = <3000000>;
++//		spi-max-frequency = <3000000>;
++		spi-max-frequency = <1500000>;
+ 		interrupt-parent = <&pio>;
+ 		interrupts = <151 IRQ_TYPE_LEVEL_LOW>;
+ 		pinctrl-names = "default";
