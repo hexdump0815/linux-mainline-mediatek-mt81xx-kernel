@@ -1,0 +1,3 @@
+- this was the try to slightly overclock the mt8183 by adding some higher opp points
+  - it does not seem to work in the end
+  - freq seems to go up to 2.2ghz (at least what is visible to linux), but performance partially breaks down (most probably due to indirect in soc thermal throttling?), so that it was even slower in the end than without overclocking

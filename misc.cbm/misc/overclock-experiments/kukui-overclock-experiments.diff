@@ -1,0 +1,73 @@
+--- mt8183.dtsi	2022-07-12 14:18:02.709342427 +0200
++++ mt8183.dtsi-overclock	2022-07-12 14:17:33.758218316 +0200
+@@ -124,7 +124,25 @@
+ 			opp-hz = /bits/ 64 <1989000000>;
+ 			opp-microvolt = <1050000>;
+ 			required-opps = <&opp2_15>;
+-		};	};
++		};
++		opp0_16 {
++			opp-hz = /bits/ 64 <2054000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_16>;
++		};
++		opp0_17 {
++			opp-hz = /bits/ 64 <2119000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_17>;
++			status = "okay";
++		};
++		opp0_18 {
++			opp-hz = /bits/ 64 <2184000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_17>;
++			status = "okay";
++		};
++	};
+ 
+ 	cluster1_opp: opp_table1 {
+ 		compatible = "operating-points-v2";
+@@ -209,6 +227,23 @@
+ 			opp-microvolt = <1050000>;
+ 			required-opps = <&opp2_15>;
+ 		};
++		opp1_16 {
++			opp-hz = /bits/ 64 <2054000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_16>;
++		};
++		opp1_17 {
++			opp-hz = /bits/ 64 <2119000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_17>;
++			status = "okay";
++		};
++		opp1_18 {
++			opp-hz = /bits/ 64 <2184000000>;
++			opp-microvolt = <1050000>;
++			required-opps = <&opp2_17>;
++			status = "okay";
++		};
+ 	};
+ 
+ 	cci_opp: opp_table2 {
+@@ -278,6 +313,19 @@
+ 			opp-hz = /bits/ 64 <1196000000>;
+ 			opp-microvolt = <1050000>;
+ 		};
++		opp2_16: opp-1248000000 {
++			opp-hz = /bits/ 64 <1248000000>;
++			opp-microvolt = <1050000>;
++		};
++		opp2_17: opp-1300000000 {
++			opp-hz = /bits/ 64 <1300000000>;
++			opp-microvolt = <1050000>;
++		};
++		opp2_18: opp-1352000000 {
++			opp-hz = /bits/ 64 <1352000000>;
++			opp-microvolt = <1050000>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	cci: cci {
