@@ -1,0 +1,63 @@
+from: https://patchwork.kernel.org/project/linux-mediatek/patch/20210720100553.2340425-1-pihsun@chromium.org/
+      [v2] drm/bridge: anx7625: Use pm_runtime_force_{suspend, resume}
+
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+index 14d73fb1dd15..8325e8d0ee19 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.c
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -1349,6 +1349,8 @@ static void anx7625_bridge_detach(struct drm_bridge *bridge)
+ 		mipi_dsi_detach(ctx->dsi);
+ 		mipi_dsi_device_unregister(ctx->dsi);
+ 	}
++	if (ctx->link)
++		device_link_del(ctx->link);
+ }
+ 
+ static int anx7625_bridge_attach(struct drm_bridge *bridge,
+@@ -1373,17 +1375,33 @@ static int anx7625_bridge_attach(struct drm_bridge *bridge,
+ 		return err;
+ 	}
+ 
++	ctx->link = device_link_add(bridge->dev->dev, dev, DL_FLAG_STATELESS);
++	if (!ctx->link) {
++		DRM_DEV_ERROR(dev, "device link creation failed");
++		err = -EINVAL;
++		goto detach_dsi;
++	}
++
+ 	if (ctx->pdata.panel_bridge) {
+ 		err = drm_bridge_attach(bridge->encoder,
+ 					ctx->pdata.panel_bridge,
+ 					&ctx->bridge, flags);
+ 		if (err)
+-			return err;
++			goto remove_device_link;
+ 	}
+ 
+ 	ctx->bridge_attached = 1;
+ 
+ 	return 0;
++
++remove_device_link:
++	device_link_del(ctx->link);
++detach_dsi:
++	if (ctx->dsi) {
++		mipi_dsi_detach(ctx->dsi);
++		mipi_dsi_device_unregister(ctx->dsi);
++	}
++	return err;
+ }
+ 
+ static enum drm_mode_status
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.h b/drivers/gpu/drm/bridge/analogix/anx7625.h
+index edbbfe410a56..299e62df6238 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.h
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.h
+@@ -473,6 +473,7 @@ struct anx7625_data {
+ 	struct drm_connector *connector;
+ 	struct mipi_dsi_device *dsi;
+ 	struct drm_dp_aux aux;
++	struct device_link *link;
+ };
+ 
+ #endif  /* __ANX7625_H__ */

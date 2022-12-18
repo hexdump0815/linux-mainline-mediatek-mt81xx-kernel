@@ -1,0 +1,62 @@
+based on: https://patchwork.kernel.org/project/linux-mediatek/patch/20211213162856.235130-2-hsinyi@chromium.org/
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts
+new file mode 100644
+index 00000000000000..51bf2893ec03b1
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2021 Google LLC
++ */
++
++/dts-v1/;
++#include "mt8183-kukui-jacuzzi-fennel.dtsi"
++#include "mt8183-kukui-audio-da7219-rt1015p.dtsi"
++
++/ {
++	model = "Google makomo sku0 board";
++	compatible = "google,makomo-rev4-sku0", "google,makomo-rev5-sku0",
++		"google,makomo", "mediatek,mt8183";
++};
++
++&qca_wifi {
++	qcom,ath10k-calibration-variant = "GO_FENNEL14";
++};
++
++&mmc1_pins_uhs {
++	pins_clk {
++		drive-strength = <MTK_DRIVE_6mA>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts
+new file mode 100644
+index 00000000000000..c3b7e9bb0c8960
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2021 Google LLC
++ */
++
++/dts-v1/;
++#include "mt8183-kukui-jacuzzi-fennel.dtsi"
++#include "mt8183-kukui-audio-ts3a227e-rt1015p.dtsi"
++
++/ {
++	model = "Google makomo sku1 board";
++	compatible = "google,makomo-rev4-sku1", "google,makomo-rev5-sku1",
++		"google,makomo", "mediatek,mt8183";
++};
++
++&qca_wifi {
++	qcom,ath10k-calibration-variant = "GO_FENNEL14";
++};
++
++&mmc1_pins_uhs {
++	pins_clk {
++		drive-strength = <MTK_DRIVE_6mA>;
++	};
++};

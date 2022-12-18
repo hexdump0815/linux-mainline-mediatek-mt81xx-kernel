@@ -1,0 +1,25 @@
+based on: https://patchwork.kernel.org/project/linux-mediatek/patch/20211213162856.235130-4-hsinyi@chromium.org/
+
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index 75bb06d1802a08..828f5f3fde4e20 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -191,6 +191,18 @@ properties:
+               - google,kodama-sku32
+           - const: google,kodama
+           - const: mediatek,mt8183
++      - description: Google Makomo (Lenovo 100e Gen 2)
++        items:
++          - const: google,makomo-rev4-sku0
++          - const: google,makomo-rev5-sku0
++          - const: google,makomo
++          - const: mediatek,mt8183
++      - description: Google Makomo (Lenovo 100e Gen 2)
++        items:
++          - const: google,makomo-rev4-sku1
++          - const: google,makomo-rev5-sku1
++          - const: google,makomo
++          - const: mediatek,mt8183
+       - description: Google Willow (Acer Chromebook 311 C722/C722T)
+         items:
+           - enum:

@@ -3,7 +3,6 @@
 # - /compile/source/linux-stable-mt8 - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
-# - /compile/doc/kernel-extra-patches - https://github.com/hexdump0815/kernel-extra-patches
 # name: stb-mt8 - chromebook mediatek mt818x
 
 # INFO this is for mt8183 based chromebooks - see also readme.cbm
@@ -11,19 +10,13 @@
 cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/6.0.0/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/6.1.0/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches to add some extra dtbs not yet in mainline to mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/6.0.0/more-dtbs/*.patch; do
-  echo === $i
-  patch -p1 < $i
-done
-
-# apply the multi gen lru kernel extra patches
-for i in /compile/doc/kernel-extra-patches/multi-gen-lru/v15/*.diff; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/6.1.0/more-dtbs/*.patch; do
   echo === $i
   patch -p1 < $i
 done
