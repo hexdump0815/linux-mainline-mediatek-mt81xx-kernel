@@ -15,6 +15,12 @@ for i in /compile/doc/stable-mt/misc.cbm/patches/6.1.0/mt8173*.patch; do
   patch -p1 < $i
 done
 
+# patches for mt81xx
+for i in /compile/doc/stable-mt/misc.cbm/patches/6.1.0/mt81xx*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
+
 export ARCH=arm64
 scripts/kconfig/merge_config.sh -m arch/arm64/configs/defconfig /compile/doc/kernel-config-options/chromebooks-aarch64.cfg /compile/doc/kernel-config-options/mediatek.cfg /compile/doc/kernel-config-options/docker-options.cfg /compile/doc/kernel-config-options/options-to-remove-generic.cfg /compile/doc/stable-mt/misc.cbm/options/options-to-remove-special.cfg /compile/doc/kernel-config-options/additional-options-generic.cfg /compile/doc/kernel-config-options/additional-options-aarch64.cfg /compile/doc/stable-mt/misc.cbm/options/additional-options-special.cfg
 ( cd /compile/doc/kernel-config-options ; git rev-parse --verify HEAD ) > /compile/doc/stable-mt/misc.cbm/options/kernel-config-options.version
