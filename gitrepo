@@ -1,2 +1,6 @@
 origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (fetch)
 origin	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git (push)
+
+# mt819x repo
+origin	https://gitlab.collabora.com/google/chromeos-kernel.git (fetch)
+origin	https://gitlab.collabora.com/google/chromeos-kernel.git (push)
