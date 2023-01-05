@@ -5,8 +5,6 @@
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: stb-mt8 - chromebook mediatek mt818x
 
-# INFO this is for mt8183 based chromebooks - see also readme.cbm
-
 cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
