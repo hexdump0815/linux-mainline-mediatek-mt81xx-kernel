@@ -1,8 +1,0 @@
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dts.org	2021-07-31 10:27:36.469393440 +0200
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dts	2021-07-31 10:27:50.733476886 +0200
-@@ -20,4 +20,5 @@
- &panel {
- 	status = "okay";
- 	compatible = "auo,kd101n80-45na";
-+	rotation = <270>;
- };
