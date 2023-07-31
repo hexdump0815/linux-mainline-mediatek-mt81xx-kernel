@@ -1,0 +1,94 @@
+based on: https://patchwork.kernel.org/project/linux-mediatek/patch/20211213162856.235130-1-hsinyi@chromium.org/
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts
+new file mode 100644
+index 00000000000000..f923b8c3c49c36
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2021 Google LLC
++ */
++
++/dts-v1/;
++#include "mt8183-kukui-kakadu.dtsi"
++#include "mt8183-kukui-audio-da7219-rt1015p.dtsi"
++
++/ {
++	model = "MediaTek katsu board";
++	compatible = "google,katsu-sku32", "google,katsu", "mediatek,mt8183";
++};
++
++&i2c0 {
++	status = "okay";
++
++	/delete-node/touchscreen@10;
++	touchscreen1: touchscreen@5d {
++		compatible = "goodix,gt7375p";
++		reg = <0x5d>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&open_touch>;
++
++		interrupt-parent = <&pio>;
++		interrupts = <155 IRQ_TYPE_LEVEL_LOW>;
++
++		reset-gpios = <&pio 156 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&panel {
++	compatible = "starry,2081101qfh032011-53g";
++};
++
++&qca_wifi {
++	qcom,ath10k-calibration-variant = "GO_KATSU";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts
+new file mode 100644
+index 00000000000000..1ab14096a279c6
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2021 Google LLC
++ */
++
++/dts-v1/;
++#include "mt8183-kukui-kakadu.dtsi"
++#include "mt8183-kukui-audio-rt1015p.dtsi"
++
++/ {
++	model = "MediaTek katsu sku38 board";
++	compatible = "google,katsu-sku38", "google,katsu", "mediatek,mt8183";
++};
++
++&i2c0 {
++	status = "okay";
++
++	/delete-node/touchscreen@10;
++	touchscreen1: touchscreen@5d {
++		compatible = "goodix,gt7375p";
++		reg = <0x5d>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&open_touch>;
++
++		interrupt-parent = <&pio>;
++		interrupts = <155 IRQ_TYPE_LEVEL_LOW>;
++
++		reset-gpios = <&pio 156 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&panel {
++	compatible = "starry,2081101qfh032011-53g";
++};
++
++&qca_wifi {
++        qcom,ath10k-calibration-variant = "GO_KATSU";
++};
++
++&sound {
++	compatible = "mediatek,mt8183_mt6358_ts3a227_rt1015p";
++};

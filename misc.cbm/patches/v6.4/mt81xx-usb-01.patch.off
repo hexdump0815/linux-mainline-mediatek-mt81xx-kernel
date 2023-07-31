@@ -1,0 +1,14 @@
+from: https://patchwork.kernel.org/project/linux-mediatek/patch/20221128063337.18124-1-chunfeng.yun@mediatek.com/
+
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index cff3c4aea036..f7cbb08fc506 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -646,7 +646,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 
+ dealloc_usb3_hcd:
+ 	usb_remove_hcd(xhci->shared_hcd);
+-	xhci->shared_hcd = NULL;
+ 
+ put_usb3_hcd:
+ 	usb_put_hcd(xhci->shared_hcd);

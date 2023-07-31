@@ -1,0 +1,22 @@
+based on: https://patchwork.kernel.org/project/linux-mediatek/patch/20210604052312.1040707-2-hsinyi@chromium.org/
+
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index 80a05f6fee85b..02c0653737648 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -126,6 +126,15 @@ properties:
+         items:
+           - const: google,burnet
+           - const: mediatek,mt8183
++      - description: Google Cerise (ASUS Chromebook CZ1) / Stern (ASUS Chromebook Flip CZ1)
++        items:
++          - enum:
++              - google,cerise-sku0
++              - google,cerise-sku1
++              - google,cerise-rev3-sku0
++              - google,cerise-rev3-sku1
++          - const: google,cerise
++          - const: mediatek,mt8183
+       - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
+         items:
+           - enum:

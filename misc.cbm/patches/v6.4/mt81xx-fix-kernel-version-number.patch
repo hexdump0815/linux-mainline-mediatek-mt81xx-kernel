@@ -1,0 +1,16 @@
+this was a quick hack to bring back the + at the end of the kernel version
+instead of -dirty ... no idea why that changed ...
+
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 3d3babac8298..667f98931ec7 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -71,7 +71,7 @@ scm_version()
+ 
+ 	# If we are at the tagged commit, we ignore it because the version is
+ 	# well-defined.
+-	if [ -z "$(git describe --exact-match --match=$tag 2>/dev/null)" ]; then
++	if [ ! -z "$(git describe --exact-match --match=$tag 2>/dev/null)" ]; then
+ 
+ 		# If only the short version is requested, don't bother
+ 		# running further git commands
