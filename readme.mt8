@@ -5,6 +5,9 @@
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: stb-mt8 - chromebook mediatek mt818x
 
+# it looks like for newer kernel versions like v6.5 the following packages have to be
+# installed in order to get the tool compiled well: libelf-dev python3-dev libtraceevent-dev
+
 cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
