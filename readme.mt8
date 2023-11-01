@@ -11,19 +11,19 @@
 cd /compile/source/linux-stable-mt8
 
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.4/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.6/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches for mt81xx
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.4/mt81xx*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.6/mt81xx*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches to add some extra dtbs not yet in mainline to mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.4/more-dtbs/*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.6/more-dtbs/*.patch; do
   echo === $i
   patch -p1 < $i
 done
@@ -35,6 +35,8 @@ make olddefconfig
 ./scripts/config --set-str CONFIG_LOCALVERSION "-stb-mt8"
 make -j 8 Image dtbs modules
 cd tools/perf
+# this is to avoid compile errors
+export NO_JEVENTS=1
 make
 cd ../power/cpupower
 make

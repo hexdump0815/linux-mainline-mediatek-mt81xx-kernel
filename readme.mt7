@@ -11,13 +11,13 @@
 cd /compile/source/linux-stable-mt7
 
 # patches for mt8173/oak
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.4/mt8173*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.6/mt8173*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches for mt81xx
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.4/mt81xx*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.6/mt81xx*.patch; do
   echo === $i
   patch -p1 < $i
 done
@@ -29,6 +29,8 @@ make olddefconfig
 ./scripts/config --set-str CONFIG_LOCALVERSION "-stb-mt7"
 make -j 4 Image dtbs modules
 cd tools/perf
+# this is to avoid compile errors
+export NO_JEVENTS=1
 make
 cd ../power/cpupower
 make

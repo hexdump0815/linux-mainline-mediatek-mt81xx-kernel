@@ -1,0 +1,13 @@
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 38b96c6797f4..494d39bfc29e 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -87,7 +87,7 @@ scm_version()
+ 
+ 	# If we are at the tagged commit, we ignore it because the version is
+ 	# well-defined.
+-	if [ "${tag}" != "${desc}" ]; then
++	if [ ! "${tag}" != "${desc}" ]; then
+ 
+ 		# If only the short version is requested, don't bother
+ 		# running further git commands

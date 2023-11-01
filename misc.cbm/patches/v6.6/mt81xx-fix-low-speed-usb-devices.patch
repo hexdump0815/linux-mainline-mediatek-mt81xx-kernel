@@ -1,0 +1,43 @@
+this one reverts commit 8b13ea05117ffad4727b0971ed09122d5c91c4dc from mainline
+from author: Chunfeng Yun <chunfeng.yun@mediatek.com>
+from date:   Fri Aug 19 16:05:55 2022 +0800
+subject: usb: xhci-mtk: relax TT periodic bandwidth allocation
+link: https://lore.kernel.org/r/20220819080556.32215-1-chunfeng.yun@mediatek.com
+
+if this commit is in it results in low speed usb devices (keybard, mice etc.)
+connected to a usb hub longer working properly and kernel messages like:
+"kernel: usb 1-2.1.2: reset low-speed USB device number 6 using xhci-mtk"
+
+diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
+index 579899eb24c1..d86f1c84ad8f 100644
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -425,6 +425,7 @@ static int check_fs_bus_bw(struct mu3h_sch_ep_info *sch_ep, int offset)
+ 
+ static int check_sch_tt(struct mu3h_sch_ep_info *sch_ep, u32 offset)
+ {
++	u32 extra_cs_count;
+ 	u32 start_ss, last_ss;
+ 	u32 start_cs, last_cs;
+ 
+@@ -460,12 +461,18 @@ static int check_sch_tt(struct mu3h_sch_ep_info *sch_ep, u32 offset)
+ 		if (last_cs > 7)
+ 			return -ESCH_CS_OVERFLOW;
+ 
++		if (sch_ep->ep_type == ISOC_IN_EP)
++			extra_cs_count = (last_cs == 7) ? 1 : 2;
++		else /*  ep_type : INTR IN / INTR OUT */
++			extra_cs_count = 1;
++
++		cs_count += extra_cs_count;
+ 		if (cs_count > 7)
+ 			cs_count = 7; /* HW limit */
+ 
+ 		sch_ep->cs_count = cs_count;
+-		/* ss, idle are ignored */
+-		sch_ep->num_budget_microframes = cs_count;
++		/* one for ss, the other for idle */
++		sch_ep->num_budget_microframes = cs_count + 2;
+ 
+ 		/*
+ 		 * if interval=1, maxp >752, num_budge_micoframe is larger
