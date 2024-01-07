@@ -1,0 +1,19 @@
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -2099,7 +2099,7 @@
+ 		/* The tzts1 ~ tzts6 don't need to polling */
+ 		/* The tzts1 ~ tzts6 don't need to thermal throttle */
+ 
+-		tzts1: tzts1 {
++/*		tzts1: tzts1 {
+ 			polling-delay-passive = <0>;
+ 			polling-delay = <0>;
+ 			thermal-sensors = <&thermal 1>;
+@@ -2151,6 +2151,6 @@
+ 			sustainable-power = <5000>;
+ 			trips {};
+ 			cooling-maps {};
+-		};
++		}; */
+ 	};
+ };
