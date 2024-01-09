@@ -1,0 +1,42 @@
+from: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20230722122534.2279689-1-zhengxingda@iscas.ac.cn/
+see also: https://oftc.irclog.whitequark.org/linux-sunxi/2024-01-09#32813409
+
+diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+index 6fb14e521197..2c76df847e84 100644
+--- a/drivers/thermal/thermal_of.c
++++ b/drivers/thermal/thermal_of.c
+@@ -127,15 +127,17 @@ static struct thermal_trip *thermal_of_trips_init(struct device_node *np, int *n
+ 
+ 	trips = of_get_child_by_name(np, "trips");
+ 	if (!trips) {
+-		pr_err("Failed to find 'trips' node\n");
+-		return ERR_PTR(-EINVAL);
++		pr_debug("Failed to find 'trips' node\n");
++		*ntrips = 0;
++		return NULL;
+ 	}
+ 
+ 	count = of_get_child_count(trips);
+ 	if (!count) {
+-		pr_err("No trip point defined\n");
+-		ret = -EINVAL;
+-		goto out_of_node_put;
++		pr_debug("No trip point defined\n");
++		of_node_put(trips);
++		*ntrips = 0;
++		return NULL;
+ 	}
+ 
+ 	tt = kzalloc(sizeof(*tt) * count, GFP_KERNEL);
+@@ -519,7 +521,10 @@ static struct thermal_zone_device *thermal_of_zone_register(struct device_node *
+ 	of_ops->bind = thermal_of_bind;
+ 	of_ops->unbind = thermal_of_unbind;
+ 
+-	mask = GENMASK_ULL((ntrips) - 1, 0);
++	if (ntrips)
++		mask = GENMASK_ULL((ntrips) - 1, 0);
++	else
++		mask = 0;
+ 
+ 	tz = thermal_zone_device_register_with_trips(np->name, trips, ntrips,
+ 						     mask, data, of_ops, tzp,
