@@ -3,9 +3,10 @@
 # - /compile/source/linux-stable-mt9 - the kernel sources checked out from gitrepo
 # - /compile/result/stable-mt - the resulting kernel, modules etc. tar.gz files
 # - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
-# name: cos-mt9 - chromebook mediatek mt819x based on a chromeos mainline kernel tree
+# name: cos-mt9 - chromebook mediatek mt819x based on a chromeos mainline kernel dev tree
 
-# INFO - this is based on commit f4fac06087edd7839f48546f1aef8dd5067a655f of https://gitlab.collabora.com/google/chromeos-kernel.git
+# INFO - this is based on commit 7080f6ac6a10642612c9ac33f770dee559bfdccb of
+#        the for-kernelci branch of https://gitlab.collabora.com/google/chromeos-kernel.git
 #      - required: apt-get -y install libelf-dev
 
 cd /compile/source/linux-stable-mt9
@@ -41,6 +42,8 @@ cp -v tools/power/cpupower/libcpupower.so.0.0.1 /lib/modules/${kver}/tools/libcp
 cp -v .config /boot/config-${kver}
 cp -v arch/arm64/boot/Image /boot/Image-${kver}
 mkdir -p /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/mediatek/mt817*.dtb /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/mediatek/mt818*.dtb /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt819*.dtb /boot/dtb-${kver}
 cp -v System.map /boot/System.map-${kver}
 # start chromebook special - required: apt-get install liblz4-tool vboot-kernel-utils
@@ -48,7 +51,7 @@ cp arch/arm64/boot/Image Image
 lz4 -f Image Image.lz4
 dd if=/dev/zero of=bootloader.bin bs=512 count=1
 cp /compile/doc/stable-mt/misc.mt9/misc/cmdline cmdline
-ls arch/arm64/boot/dts/mediatek/mt8192-*.dtb arch/arm64/boot/dts/mediatek/mt8195-*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 kernel.itb
+ls arch/arm64/boot/dts/mediatek/mt8186-*.dtb arch/arm64/boot/dts/mediatek/mt8192-*.dtb arch/arm64/boot/dts/mediatek/mt8195-*.dtb arch/arm64/boot/dts/mediatek/mt8195-*.dtb | xargs printf " -b %s" | xargs mkimage -D "-I dts -O dtb -p 2048" -f auto -A arm64 -O linux -T kernel -C lz4 -a 0 -d Image.lz4 kernel.itb
 vbutil_kernel --pack vmlinux.kpart --keyblock /usr/share/vboot/devkeys/kernel.keyblock --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --version 1 --config cmdline --bootloader bootloader.bin --vmlinuz kernel.itb --arch arm
 cp -v vmlinux.kpart /boot/vmlinux.kpart-${kver}
 rm -f Image Image.lz4 cmdline bootloader.bin kernel.itb vmlinux.kpart
