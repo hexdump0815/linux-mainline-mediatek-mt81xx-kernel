@@ -23,8 +23,8 @@ for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8183*.patch; do
   patch -p1 < $i
 done
 
-# patches for mt81xx
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt81xx*.patch; do
+# patches for mt8186/corsola
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8186*.patch; do
   echo === $i
   patch -p1 < $i
 done
