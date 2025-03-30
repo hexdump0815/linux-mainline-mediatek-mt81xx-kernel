@@ -1,0 +1,89 @@
+from: https://patchwork.kernel.org/project/linux-mediatek/cover/20250318102259.189289-1-laura.nao@collabora.com/
+
+Add a new compatible entry for "google,spherion" to the hardware prober
+platform list, using the same I2C component prober and trackpad data as
+"google,hana".
+
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ drivers/platform/chrome/chromeos_of_hw_prober.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/platform/chrome/chromeos_of_hw_prober.c b/drivers/platform/chrome/chromeos_of_hw_prober.c
+index c6992f5cdc76..019578bc7ad0 100644
+--- a/drivers/platform/chrome/chromeos_of_hw_prober.c
++++ b/drivers/platform/chrome/chromeos_of_hw_prober.c
+@@ -84,6 +84,10 @@ static const struct hw_prober_entry hw_prober_platforms[] = {
+ 		.compatible = "google,hana",
+ 		.prober = chromeos_i2c_component_prober,
+ 		.data = &chromeos_i2c_probe_hana_trackpad,
++	}, {
++		.compatible = "google,spherion",
++		.prober = chromeos_i2c_component_prober,
++		.data = &chromeos_i2c_probe_hana_trackpad,
+ 	},
+ };
+ 
+
+Different Spherion variants use different trackpads on the same I2C2
+bus. Instead of enabling all of them by default, mark them as
+"fail-needs-probe" and let the implementation determine which one is
+actually present.
+
+Additionally, move the trackpad pinctrl entry back to the individual
+trackpad nodes.
+
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ .../arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts | 7 +++++++
+ arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi           | 6 ++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts b/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
+index 8c485c3ced2c..163960f58db5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
+@@ -85,8 +85,15 @@ &i2c2 {
+ 	trackpad@2c {
+ 		compatible = "hid-over-i2c";
+ 		reg = <0x2c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&trackpad_pins>;
+ 		hid-descr-addr = <0x20>;
+ 		interrupts-extended = <&pio 15 IRQ_TYPE_LEVEL_LOW>;
+ 		wakeup-source;
++		status = "fail-needs-probe";
+ 	};
+ };
++
++&trackpad {
++	status = "fail-needs-probe";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+index dd0d07fbe61a..b11b32a63bbc 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+@@ -335,11 +335,13 @@ &i2c2 {
+ 	clock-frequency = <400000>;
+ 	clock-stretch-ns = <12600>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c2_pins>, <&trackpad_pins>;
++	pinctrl-0 = <&i2c2_pins>;
+ 
+-	trackpad@15 {
++	trackpad: trackpad@15 {
+ 		compatible = "elan,ekth3000";
+ 		reg = <0x15>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&trackpad_pins>;
+ 		interrupts-extended = <&pio 15 IRQ_TYPE_LEVEL_LOW>;
+ 		vcc-supply = <&pp3300_u>;
+ 		wakeup-source;
