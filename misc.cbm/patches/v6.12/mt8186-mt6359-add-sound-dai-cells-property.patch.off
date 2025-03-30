@@ -1,0 +1,26 @@
+from: https://patchwork.kernel.org/project/linux-mediatek/patch/20241210-genio700-audio-output-v2-1-c50886ae0be2@collabora.com/
+see also: https://github.com/gregkh/linux/commit/9bc8353be720ca1f9cb6e03825929bc172e1157d
+
+the hope is that this maybe helps with corsola audio ...
+
+MT6359 provides digital audio interfaces. Add a #sound-dai-cells
+property for it to allow pointing to it from dai-link nodes.
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ arch/arm64/boot/dts/mediatek/mt6359.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt6359.dtsi b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
+index 8e1b8c85c6ede94a7beaefcdfc74ce47b3ab50fe..150ad84d5d2b30ab6064c71e1375ce5df5ae4b36 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6359.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
+@@ -8,6 +8,7 @@ pmic: pmic {
+ 		compatible = "mediatek,mt6359";
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		#sound-dai-cells = <1>;
+ 
+ 		pmic_adc: adc {
+ 			compatible = "mediatek,mt6359-auxadc";
