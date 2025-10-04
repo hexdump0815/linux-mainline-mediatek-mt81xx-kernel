@@ -1,0 +1,28 @@
+based on https://gitlab.collabora.com/mediatek/aiot/linux/-/commit/8f40003af37e1567e53fdfcb6446ab4b90755bc0
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
+index 6e20f7037b5b..5a14ed3d4a74 100644
+--- a/drivers/gpu/drm/mediatek/mtk_plane.c
++++ b/drivers/gpu/drm/mediatek/mtk_plane.c
+@@ -21,9 +21,11 @@
+ 
+ static const u64 modifiers[] = {
+ 	DRM_FORMAT_MOD_LINEAR,
++	/* HACK disable AFBC support for now
+ 	DRM_FORMAT_MOD_ARM_AFBC(AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 |
+ 				AFBC_FORMAT_MOD_SPLIT |
+ 				AFBC_FORMAT_MOD_SPARSE),
++				*/
+ 	DRM_FORMAT_MOD_INVALID,
+ };
+ 
+@@ -74,6 +76,9 @@ static bool mtk_plane_format_mod_supported(struct drm_plane *plane,
+ 	if (modifier == DRM_FORMAT_MOD_LINEAR)
+ 		return true;
+ 
++	/* HACK: Disable AFBC support for all planes */
++	return false;
++
+ 	if (modifier != DRM_FORMAT_MOD_ARM_AFBC(
+ 				AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 |
+ 				AFBC_FORMAT_MOD_SPLIT |
