@@ -12,43 +12,43 @@
 cd /compile/source/linux-stable-cbm
 
 # patches for mt8173/oak
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8173*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt8173*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches for mt8183/kukui
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8183*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt8183*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 # patches for mt8186/corsola
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8186*.patch; do
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt8186*.patch; do
   echo === $i
   patch -p1 < $i
 done
 
 ## patches for mt8192/asurada
-#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8192*.patch; do
+#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt8192*.patch; do
 #  echo === $i
 #  patch -p1 < $i
 #done
 
 ## patches for mt8195/cherry
-#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt8195*.patch; do
+#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt8195*.patch; do
 #  echo === $i
 #  patch -p1 < $i
 #done
 
-# patches for all mt81xx devices
-for i in /compile/doc/stable-mt/misc.cbm/patches/v6.12/mt81xx*.patch; do
-  echo === $i
-  patch -p1 < $i
-done
+## patches for all mt81xx devices
+#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt81xx*.patch; do
+#  echo === $i
+#  patch -p1 < $i
+#done
 
 # remove battery failed to report property log spam
-patch -p1 < /compile/doc/kernel-extra-patches/remove-battery-property-log-spam/v6.6.112.patch
+patch -p1 < /compile/doc/kernel-extra-patches/remove-battery-property-log-spam/v6.18.patch
 # remove panfrost purge log spam
 patch -p1 < /compile/doc/kernel-extra-patches/remove-panfrost-purge-log-spam/v6.12.12.patch
 # fix kernel version number: + instead of -dirty at the end
