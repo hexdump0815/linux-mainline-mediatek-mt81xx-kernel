@@ -79,7 +79,7 @@ cp -v tools/power/cpupower/libcpupower.so.? /lib/modules/${kver}/tools
 cp -v .config /boot/config-${kver}
 cp -v arch/arm64/boot/Image /boot/Image-${kver}
 mkdir -p /boot/dtb-${kver}
-cp -v arch/arm64/boot/dts/mediatek/mt8173-elm-*.dtb /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/mediatek/mt8173-elm*.dtb /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt8183-kukui-*.dtb /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt8186-corsola-*.dtb /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/mediatek/mt8192-asurada-*.dtb /boot/dtb-${kver}
