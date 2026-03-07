@@ -15,7 +15,7 @@ index 4b87d4940c8c..7d26bbc23fe2 100644
 +	status = "okay";
 +	ports {
 +		port@1 {
-+			dpi_out: endpoint {
++			dpi_out: endpoint@1 {
 +				remote-endpoint = <&it6505_in>;
 +			};
 +		};
