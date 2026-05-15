@@ -41,11 +41,11 @@ done
 #  patch -p1 < $i
 #done
 
-## patches for all mt81xx devices
-#for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt81xx*.patch; do
-#  echo === $i
-#  patch -p1 < $i
-#done
+# patches for all mt81xx devices
+for i in /compile/doc/stable-mt/misc.cbm/patches/v6.18/mt81xx*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
 
 # remove battery failed to report property log spam
 patch -p1 < /compile/doc/kernel-extra-patches/remove-battery-property-log-spam/v6.18.patch
