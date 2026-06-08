@@ -62,6 +62,7 @@ make -j 8 Image dtbs modules
 cd tools/perf
 # this is to avoid compile errors
 export NO_JEVENTS=1
+export NO_LIBELF=1
 make
 cd ../power/cpupower
 make
