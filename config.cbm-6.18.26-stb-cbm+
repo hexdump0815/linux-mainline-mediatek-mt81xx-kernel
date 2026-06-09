@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 6.18.34 Kernel Configuration
+# Linux/arm64 6.18.26 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="gcc (Debian 14.2.0-19) 14.2.0"
 CONFIG_CC_IS_GCC=y
@@ -4039,6 +4039,7 @@ CONFIG_GPIO_AGGREGATOR=m
 # CONFIG_GPIO_VIRTUSER is not set
 # end of GPIO Debugging utilities
 
+CONFIG_DEV_SYNC_PROBE=m
 # CONFIG_W1 is not set
 CONFIG_POWER_RESET=y
 # CONFIG_POWER_RESET_GPIO is not set
@@ -8740,7 +8741,7 @@ CONFIG_NLS_ISO8859_1=y
 CONFIG_NLS_UTF8=m
 CONFIG_NLS_UCS2_UTILS=m
 # CONFIG_DLM is not set
-CONFIG_UNICODE=y
+# CONFIG_UNICODE is not set
 CONFIG_IO_WQ=y
 # end of File systems
 

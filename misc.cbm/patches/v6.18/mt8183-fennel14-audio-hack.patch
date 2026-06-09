@@ -1,0 +1,42 @@
+with this we at least get speaker audio on fennel14 devices instead
+of audio probing errors ...
+
+diff --git a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
+index f848e14b091a..1e6a1cdbd246 100644
+--- a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
++++ b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
+@@ -638,13 +638,13 @@ struct snd_soc_dapm_widget mt8183_da7219_max98357_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+ 	SND_SOC_DAPM_SPK("Speakers", NULL),
+ 	SND_SOC_DAPM_SPK("Line Out", NULL),
+-	SND_SOC_DAPM_PINCTRL("TDM_OUT_PINCTRL",
+-			     "aud_tdm_out_on", "aud_tdm_out_off"),
++//	SND_SOC_DAPM_PINCTRL("TDM_OUT_PINCTRL",
++//			     "aud_tdm_out_on", "aud_tdm_out_off"),
+ };
+ 
+ static const struct snd_soc_dapm_route mt8183_da7219_max98357_dapm_routes[] = {
+ 	{"Speakers", NULL, "Speaker"},
+-	{"I2S Playback", NULL, "TDM_OUT_PINCTRL"},
++//	{"I2S Playback", NULL, "TDM_OUT_PINCTRL"},
+ };
+ 
+ static struct snd_soc_card mt8183_da7219_max98357_card = {
+@@ -694,14 +694,14 @@ struct snd_soc_dapm_widget mt8183_da7219_rt1015_dapm_widgets[] = {
+ 	SND_SOC_DAPM_SPK("Left Spk", NULL),
+ 	SND_SOC_DAPM_SPK("Right Spk", NULL),
+ 	SND_SOC_DAPM_LINE("Line Out", NULL),
+-	SND_SOC_DAPM_PINCTRL("TDM_OUT_PINCTRL",
+-			     "aud_tdm_out_on", "aud_tdm_out_off"),
++//	SND_SOC_DAPM_PINCTRL("TDM_OUT_PINCTRL",
++//			     "aud_tdm_out_on", "aud_tdm_out_off"),
+ };
+ 
+ static const struct snd_soc_dapm_route mt8183_da7219_rt1015_dapm_routes[] = {
+ 	{"Left Spk", NULL, "Left SPO"},
+ 	{"Right Spk", NULL, "Right SPO"},
+-	{"I2S Playback", NULL, "TDM_OUT_PINCTRL"},
++//	{"I2S Playback", NULL, "TDM_OUT_PINCTRL"},
+ };
+ 
+ static struct snd_soc_card mt8183_da7219_rt1015_card = {
