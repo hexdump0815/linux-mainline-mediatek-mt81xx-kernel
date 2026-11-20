@@ -1,0 +1,25 @@
+From 451ff3f48699abb37b75a30f84c706156f9d5804 Mon Sep 17 00:00:00 2001
+From: Ingo Reitz <9l@9lo.re>
+Date: Thu, 20 Aug 2026 03:54:06 +0200
+Subject: [PATCH] pmdomain: mediatek: set GENPD_FLAG_NO_STAY_ON flag
+
+Signed-off-by: Ingo Reitz <9l@9lo.re>
+---
+ drivers/pmdomain/mediatek/mtk-pm-domains.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+index 6089c8cf5bbc..2ce64dc2e174 100644
+--- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
++++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+@@ -880,6 +880,7 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
+ 		/* HW-Voter code can be invoked in atomic context */
+ 		pd->genpd.flags |= GENPD_FLAG_IRQ_SAFE;
+ 	}
++	pd->genpd.flags |= GENPD_FLAG_NO_STAY_ON;
+ 
+ 	/*
+ 	 * Initially turn on all domains to make the domains usable
+-- 
+2.55.0
+

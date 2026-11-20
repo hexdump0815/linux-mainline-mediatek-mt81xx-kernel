@@ -1,0 +1,43 @@
+it looks like the recently enabled dma for the uart on mt8183 is broken and as
+a result bluetooth does not work anymore on kukui devices as it communicates
+via uart with the bt device
+
+see also: https://libera.catirclogs.org/linux-mediatek/2026-11-19
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 8b0992548431..2a2e55eb25f2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -1104,8 +1104,8 @@ uart0: serial@11002000 {
+ 			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART0>;
+ 			clock-names = "baud", "bus";
+-			dmas = <&apdma 0>, <&apdma 1>;
+-			dma-names = "tx", "rx";
++//			dmas = <&apdma 0>, <&apdma 1>;
++//			dma-names = "tx", "rx";
+ 			status = "disabled";
+ 		};
+ 
+@@ -1116,8 +1116,8 @@ uart1: serial@11003000 {
+ 			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART1>;
+ 			clock-names = "baud", "bus";
+-			dmas = <&apdma 2>, <&apdma 3>;
+-			dma-names = "tx", "rx";
++//			dmas = <&apdma 2>, <&apdma 3>;
++//			dma-names = "tx", "rx";
+ 			status = "disabled";
+ 		};
+ 
+@@ -1128,8 +1128,8 @@ uart2: serial@11004000 {
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+ 			clocks = <&clk26m>, <&infracfg CLK_INFRA_UART2>;
+ 			clock-names = "baud", "bus";
+-			dmas = <&apdma 4>, <&apdma 5>;
+-			dma-names = "tx", "rx";
++//			dmas = <&apdma 4>, <&apdma 5>;
++//			dma-names = "tx", "rx";
+ 			status = "disabled";
+ 		};
+ 
